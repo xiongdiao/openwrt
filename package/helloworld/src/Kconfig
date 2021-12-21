@@ -1,0 +1,8 @@
+# 该文件是make menuconfig显示界面会读取的文件
+config HELLOWORLD
+	tristate "HelloWorld driver"
+	default n
+	help
+	  This is an HelloWorld Driver!
+
+
