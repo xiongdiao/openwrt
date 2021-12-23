@@ -1,0 +1,16 @@
+menuconfig WIFI_MT7603E
+    bool "MT7603E WiFi"
+    default n
+if WIFI_MT7603E
+    source "drivers/net/wireless/mtk/mt7603/mt7603_wifi/Kconfig"
+endif
+
+
+
+menuconfig WIFI_MT7663E
+    bool "MT7663E WiFi"
+    default n
+if WIFI_MT7663E
+    source "drivers/net/wireless/mtk/mt7663/mt_wifi/embedded/Kconfig"
+endif
+
