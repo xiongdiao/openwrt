@@ -553,7 +553,7 @@ do { \
 #define	THREAD_PID_INIT_VALUE	NULL
 /* TODO: Use this IOCTL carefully when linux kernel version larger than 2.6.27, because the PID only correct when the user space task do this ioctl itself. */
 /*#define RTMP_GET_OS_PID(_x, _y)    _x = get_task_pid(current, PIDTYPE_PID); */
-#define RT_GET_OS_PID(_x, _y)		do{rcu_read_lock(); _x=current->pids[PIDTYPE_PID].pid; rcu_read_unlock();}while(0)
+#define RT_GET_OS_PID(_x, _y)		do{rcu_read_lock(); _x=current->thread_pid; rcu_read_unlock();}while(0)
 #ifdef OS_ABL_FUNC_SUPPORT
 #define RTMP_GET_OS_PID(_a, _b)			RtmpOsGetPid(&_a, _b)
 #else
@@ -887,8 +887,9 @@ void linux_pci_unmap_single(void *handle, ra_dma_addr_t dma_addr, size_t size, i
 #define PCI_MAP_SINGLE_DEV(_handle, _ptr, _size, _sd_idx, _dir)				\
 	linux_pci_map_single(_handle, _ptr, _size, _sd_idx, _dir)
 
-#define DMA_MAPPING_ERROR(_handle, _ptr)	\
+/*#define DMA_MAPPING_ERROR(_handle, _ptr)	\
 	dma_mapping_error(&((struct pci_dev *)(_handle))->dev, _ptr)
+*/
 
 #define PCI_UNMAP_SINGLE(_pAd, _ptr, _size, _dir)						\
 	linux_pci_unmap_single(((POS_COOKIE)(_pAd->OS_Cookie))->pci_dev, _ptr, _size, _dir)

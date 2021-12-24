@@ -3500,7 +3500,9 @@ VOID BigInteger_Init (
     INOUT PBIG_INTEGER *pBI)
 {
     if (*pBI != NULL)
+    {
         BigInteger_Free(pBI);
+    }
 
 	os_alloc_mem(NULL, (UCHAR **)pBI, sizeof(BIG_INTEGER));
     if (*pBI == NULL) {

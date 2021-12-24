@@ -1,13 +1,13 @@
-$(waring "=================================mt7603_wifi_ap ========================================")
+$(warning "=================================mt7603_wifi_ap ========================================")
 ifeq ($(CONFIG_SUPPORT_OPENWRT),y)
-$(waring "=================================mt7603_wifi_ap 1========================================")
+$(warning "=================================mt7603_wifi_ap 1========================================")
 ccflags-y = -I$(src)/../mt7603_wifi/include \
 		-I$(src)/../mt7603_wifi/ate/include
 DRV_NAME = mt7603
 RT_WIFI_DIR = ../mt7603_wifi
 
 else
-$(waring "=================================mt7603_wifi_ap 2========================================")
+$(warning "=================================mt7603_wifi_ap 2========================================")
 ccflags-y = -Idrivers/net/wireless/mtk/mt7603e/mt7603_wifi/include \
 		-Idrivers/net/wireless/mtk/mt7603e/mt7603_wifi/ate/include
 #EXTRA_CFLAGS = -Idrivers/net/wireless/mtk/mt7603e/mt7603_wifi/include \
@@ -948,6 +948,7 @@ EXTRA_CFLAGS += -DAGGREGATION_SUPPORT -DPIGGYBACK_SUPPORT -DWMM_SUPPORT  -DLINUX
 #-DDBG_DIAGNOSE -DDBG_RX_MCS -DDBG_TX_MCS
 
 EXTRA_CFLAGS += -DCONFIG_AP_SUPPORT -DSCAN_SUPPORT -DAP_SCAN_SUPPORT
+
 EXTRA_CFLAGS += -DDOT11_N_SUPPORT -DSTATS_COUNT_SUPPORT -DIAPP_SUPPORT -DDOT1X_SUPPORT
 #EXTRA_CFLAGS += -DRALINK_ATE -DRALINK_QA -DCONFIG_RT2880_ATE_CMD_NEW
 ifeq ($(CONFIG_RA_HW_NAT_WIFI_NEW_ARCH),n)
@@ -1049,3 +1050,4 @@ MODULE_FLAGS=$(EXTRA_CFLAGS)
 export MODULE_FLAGS
 obj-m+=$(RT_WIFI_DIR)/tools/plug_in/
 
+$(warning "=================================MODULE_FLAGS is $(MODULE_FLAGS) ========================================")

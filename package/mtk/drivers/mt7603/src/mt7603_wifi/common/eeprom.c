@@ -972,8 +972,10 @@ INT rtmp_ee_write_to_bin(
 	RTMP_OS_FD srcf;
 	RTMP_OS_FS_INFO osFSInfo;
 	const INT PCI_EFUSE_SIZE = 10;
-	UCHAR pci_pm[PCI_EFUSE_SIZE];
-	UCHAR pci_efuse[PCI_EFUSE_SIZE];
+	//UCHAR pci_pm[PCI_EFUSE_SIZE];
+	//UCHAR pci_efuse[PCI_EFUSE_SIZE];
+	UCHAR pci_pm[10];
+	UCHAR pci_efuse[10];
 	INT i = 0;
 
 #ifdef RT_SOC_SUPPORT

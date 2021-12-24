@@ -6,12 +6,13 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
-$(waring "=================================mt7603========================================")
+$(warning "=================================mt7603========================================")
 PKG_NAME:=mt7603
 PKG_VERSION:=gerrit
 #PKG_SOURCE:=MT7603e_LinuxAP_V4.1.2.1_20190503-ac1d3fab.tar.bz2
 
 include $(INCLUDE_DIR)/package.mk
+#include $(PKG_BUILD_DIR)/mt7603_wifi_ap/Makefile
 
 define KernelPackage/mt7603
   CATEGORY:=MTK Properties
@@ -64,7 +65,15 @@ PKG_MAKE_FLAGS += CONFIG_MT7603E_RALINK_MT7603E=y
 PKG_MAKE_FLAGS += CONFIG_MT7603E_RLT_WIFI=y 
 PKG_MAKE_FLAGS += CONFIG_MT7603E_MT_MAC=y 
 PKG_MAKE_FLAGS += CONFIG_MT7603E_RLT_AP_SUPPORT=m
+PKG_MAKE_FLAGS += CONFIG_SUPPORT_OPENWRT=y
+PKG_MAKE_FLAGS += CONFIG_MT7603E_APCLI_SUPPORT=y
+PKG_MAKE_FLAGS += CONFIG_MT7603E_DOT11N_DRAFT3=y
+PKG_MAKE_FLAGS += CONFIG_MT7603E_RLT_AP_SUPPORT=m
+PKG_MAKE_FLAGS += CONFIG_MT7603E_WSC_INCLUDED=y
+PKG_MAKE_FLAGS += CONFIG_RT_SECOND_IF_RF_OFFSET=0x8000 
+PKG_MAKE_FLAGS += CONFIG_RT_FIRST_IF_RF_OFFSET=0x0
 define Build/Compile
+	$(warning "================================= start call Compile========================================")
 	+$(MAKE) $(PKG_JOBS) -C "$(LINUX_DIR)" \
 		$(KERNEL_MAKE_FLAGS) \
 		$(PKG_MAKE_FLAGS) \
@@ -102,7 +111,11 @@ define Package/mt7603-scripts/conffiles
 /etc/wireless/mt7603/
 endef
 
+$(warning "================================= start call mt7603========================================")
 $(eval $(call KernelPackage,mt7603))
+$(warning "================================= start call mt7603-ko========================================")
 $(eval $(call KernelPackage,mt7603-ko))
+$(warning "================================= start call mt7603-in========================================")
 $(eval $(call KernelPackage,mt7603-in))
+$(warning "================================= start call mt7603-scripts========================================")
 $(eval $(call BuildPackage,mt7603-scripts))

@@ -2385,86 +2385,98 @@ INT RTMPAPSetInformation(
 #endif /* WSC_AP_SUPPORT */
 
 		case OID_SET_SSID:
-			if (wrq->u.data.length <= MAX_LEN_OF_SSID) {
-				UCHAR apcli_idx = pObj->ioctl_if;
-				struct wifi_dev *wdev;
-				BOOLEAN apcliEn;
-				APCLI_STRUCT *apcli_entry;
-				BSS_STRUCT *pMbss = NULL;
+            if (wrq->u.data.length <= MAX_LEN_OF_SSID) 
+            {
+                struct wifi_dev *wdev;
+                BSS_STRUCT *pMbss = NULL;
 #ifdef APCLI_SUPPORT
-				if (pObj->ioctl_if_type == INT_APCLI) {
-					apcli_entry = &pAd->ApCfg.ApCliTab[apcli_idx];
-					wdev = &apcli_entry->wdev;
-					/* bring apcli interface down first */
-					apcliEn = apcli_entry->Enable;
+                BOOLEAN apcliEn;
+                APCLI_STRUCT *apcli_entry;
+                UCHAR apcli_idx = pObj->ioctl_if;
+                if (pObj->ioctl_if_type == INT_APCLI) 
+                {
+                    apcli_entry = &pAd->ApCfg.ApCliTab[apcli_idx];
+                    wdev = &apcli_entry->wdev;
+                    /* bring apcli interface down first */
+                    apcliEn = apcli_entry->Enable;
 
-					if (apcliEn == TRUE) {
-						apcli_entry->Enable = FALSE;
-						ApCliIfDown(pAd);
-					}
+                    if (apcliEn == TRUE) 
+                    {
+                        apcli_entry->Enable = FALSE;
+                        ApCliIfDown(pAd);
+                    }
 
-					/* apcli_entry->bPeerExist = FALSE; */
-					NdisZeroMemory(apcli_entry->CfgSsid, MAX_LEN_OF_SSID);
-					Status = copy_from_user(apcli_entry->CfgSsid,
-								wrq->u.data.pointer,
-								wrq->u.data.length);
-					apcli_entry->CfgSsidLen = (UCHAR)wrq->u.data.length;
-					DBGPRINT(RT_DEBUG_TRACE,
-						("OID_APCLI_SSID::(Len=%d,Ssid=%s)\n",
-						apcli_entry->CfgSsidLen,
-						apcli_entry->CfgSsid));
-					apcli_entry->Enable = apcliEn;
+                    /* apcli_entry->bPeerExist = FALSE; */
+                    NdisZeroMemory(apcli_entry->CfgSsid, MAX_LEN_OF_SSID);
+                    Status = copy_from_user(apcli_entry->CfgSsid,
+                                wrq->u.data.pointer,
+                                wrq->u.data.length);
+                    apcli_entry->CfgSsidLen = (UCHAR)wrq->u.data.length;
+                    DBGPRINT(RT_DEBUG_TRACE,
+                                ("OID_APCLI_SSID::(Len=%d,Ssid=%s)\n",
+                                 apcli_entry->CfgSsidLen,
+                                 apcli_entry->CfgSsid));
+                    apcli_entry->Enable = apcliEn;
 
-					/* Upadte PMK and restart WPAPSK state machine for ApCli link */
-					if (((wdev->AuthMode == Ndis802_11AuthModeWPAPSK) ||
-						(wdev->AuthMode == Ndis802_11AuthModeWPA2PSK)) &&
-						apcli_entry->PSKLen > 0) {
-						RT_CfgSetWPAPSKKey(pAd, (RTMP_STRING *)apcli_entry->PSK,
-											apcli_entry->PSKLen,
-											(PUCHAR)apcli_entry->CfgSsid,
-											apcli_entry->CfgSsidLen,
-											apcli_entry->PMK);
-					}
-				} else {
+                    /* Upadte PMK and restart WPAPSK state machine for ApCli link */
+                    if (((wdev->AuthMode == Ndis802_11AuthModeWPAPSK) ||
+                                    (wdev->AuthMode == Ndis802_11AuthModeWPA2PSK)) &&
+                                apcli_entry->PSKLen > 0) {
+                        RT_CfgSetWPAPSKKey(pAd, (RTMP_STRING *)apcli_entry->PSK,
+                                    apcli_entry->PSKLen,
+                                    (PUCHAR)apcli_entry->CfgSsid,
+                                    apcli_entry->CfgSsidLen,
+                                    apcli_entry->PMK);
+                    }
+                } 
+                else
 #endif
-				if (pObj->ioctl_if < HW_BEACON_MAX_NUM) {
-					pMbss = &pAd->ApCfg.MBSSID[pObj->ioctl_if];
-					wdev = &pMbss->wdev;
-					NdisZeroMemory(pMbss->Ssid, MAX_LEN_OF_SSID);
-					Status = copy_from_user(pMbss->Ssid,
-								wrq->u.data.pointer,
-								wrq->u.data.length);
-					pMbss->SsidLen = wrq->u.data.length;
-					if (wdev == NULL) {
-						Status = -EINVAL;
-						break;
-					}
-					{
-						ap_send_broadcast_deauth(pAd, wdev);
-						if ((&wdev->AuthMode) && (&wdev->WpaMixPairCipher))
-							pMbss->CapabilityInfo |= 0x0010;
-						else
-							pMbss->CapabilityInfo &= ~(0x0010);
-						if (pAd->Dot11_H.RDMode != RD_SWITCHING_MODE) {
-							MbssKickOutStas(pAd, pObj->ioctl_if, REASON_DISASSOC_INACTIVE);
-							ap_security_init(pAd, wdev, pObj->ioctl_if);
-							ap_mlme_set_capability(pAd, pMbss);
-							ap_key_tb_single_init(pAd, pMbss);
-							APMakeBssBeacon(pAd, pObj->ioctl_if);
-							APUpdateBeaconFrame(pAd, pObj->ioctl_if);
-						}
-						DBGPRINT(RT_DEBUG_TRACE,
-							("I/F(ra%d) Set_SSID::(Len=%d,Ssid=%s)\n",
-							pObj->ioctl_if,
-							pMbss->SsidLen, pMbss->Ssid));
-					}
-				} else
-					Status = -EINVAL;
-					break;
-				}
-			} else
-				Status = -EINVAL;
-			break;
+                {
+                    if (pObj->ioctl_if < HW_BEACON_MAX_NUM) 
+                    {
+                        pMbss = &pAd->ApCfg.MBSSID[pObj->ioctl_if];
+                        wdev = &pMbss->wdev;
+                        NdisZeroMemory(pMbss->Ssid, MAX_LEN_OF_SSID);
+                        Status = copy_from_user(pMbss->Ssid,
+                                    wrq->u.data.pointer,
+                                    wrq->u.data.length);
+                        pMbss->SsidLen = wrq->u.data.length;
+                        if (wdev == NULL) {
+                            Status = -EINVAL;
+                            break;
+                        }
+                        {
+                            ap_send_broadcast_deauth(pAd, wdev);
+                            if ((&wdev->AuthMode) && (&wdev->WpaMixPairCipher))
+                              pMbss->CapabilityInfo |= 0x0010;
+                            else
+                              pMbss->CapabilityInfo &= ~(0x0010);
+                            if (pAd->Dot11_H.RDMode != RD_SWITCHING_MODE) {
+                                MbssKickOutStas(pAd, pObj->ioctl_if, REASON_DISASSOC_INACTIVE);
+                                ap_security_init(pAd, wdev, pObj->ioctl_if);
+                                ap_mlme_set_capability(pAd, pMbss);
+                                ap_key_tb_single_init(pAd, pMbss);
+                                APMakeBssBeacon(pAd, pObj->ioctl_if);
+                                APUpdateBeaconFrame(pAd, pObj->ioctl_if);
+                            }
+                            DBGPRINT(RT_DEBUG_TRACE,
+                                        ("I/F(ra%d) Set_SSID::(Len=%d,Ssid=%s)\n",
+                                         pObj->ioctl_if,
+                                         pMbss->SsidLen, pMbss->Ssid));
+                        }
+                    } 
+                    else
+                    {
+                      Status = -EINVAL;
+                    }
+                    break;
+                }
+            }
+            else
+            {
+              Status = -EINVAL;
+            }
+            break;
 
 		case OID_SET_PSK:
 			{

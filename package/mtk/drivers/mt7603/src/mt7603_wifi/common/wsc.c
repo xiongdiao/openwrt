@@ -1498,7 +1498,10 @@ VOID WscEapEnrolleeAction(
 	switch (MsgType)
 	{
 		case WSC_MSG_EAP_RSP_ID:
+        {
 			DBGPRINT(RT_DEBUG_TRACE, ("WscEapEnrolleeAction : Rx Identity(ReComputePke=%d)\n", pWscControl->RegData.ReComputePke));
+            break;
+        }
 		case WSC_MSG_EAP_REQ_START:
 			if (MsgType == WSC_MSG_EAP_REQ_START)
 				DBGPRINT(RT_DEBUG_TRACE, ("WscEapEnrolleeAction : Rx Wsc_Start(ReComputePke=%d)\n", pWscControl->RegData.ReComputePke));
@@ -3718,7 +3721,9 @@ VOID WscSendEapReqId(
 	 * random number */
 	Id = RandomByte(pAd);
     if (Id == pWpsCtrl->lastId)
+    {
         Id += 1;
+    }
 	EapFrame.Code   = EAP_CODE_REQ;
 	EapFrame.Id     = Id;
 	EapFrame.Length = cpu2be16(Length);
@@ -3728,7 +3733,9 @@ VOID WscSendEapReqId(
     /* Out buffer for transmitting EAP-Req(Identity) */
 	os_alloc_mem(NULL, (UCHAR **)&pOutBuffer, MAX_LEN_OF_MLME_BUFFER);
     if(pOutBuffer == NULL)
+    {
         return;
+    }
 
 	FrameLen = 0;
 	
@@ -3889,7 +3896,9 @@ VOID WscSendEapRspId(
     /* Out buffer for transmitting EAP-Req(Identity) */
 	os_alloc_mem(NULL, (UCHAR **)&pOutBuffer, MAX_LEN_OF_MLME_BUFFER);
     if(pOutBuffer == NULL)
+    {
         return;
+    }
 
 	FrameLen = 0;
 
@@ -4815,7 +4824,9 @@ VOID	WscSendEapFail(
     /* Out buffer for transmitting EAP-Req(Identity) */
 	os_alloc_mem(NULL, (UCHAR **)&pOutBuffer, MAX_LEN_OF_MLME_BUFFER);
     if(pOutBuffer == NULL)
+    {
         return;
+    }
 
 	FrameLen = 0;
 	
@@ -4830,7 +4841,9 @@ VOID	WscSendEapFail(
 
 
 	if (pOutBuffer)
+    {
 		os_free_mem(NULL, pOutBuffer);
+    }
 
 #ifdef CONFIG_AP_SUPPORT
 	if (pEntry && bSendDeAuth && (CurOpMode == AP_MODE))
@@ -8068,12 +8081,18 @@ INT	WscGetConfWithoutTrigger(
     }
 
     if (bFromUPnP)
+    {
         WscStop(pAd, FALSE, pWscControl);
+    }
     
 	if (pWscControl->WscMode == 1)
+    {
 		WscMode = DEV_PASS_ID_PIN;
+    }
 	else
+    {
 		WscMode = DEV_PASS_ID_PBC;
+    }
     
 	WscBuildBeaconIE(pAd, IsAPConfigured, TRUE, WscMode, pWscControl->WscConfigMethods, (pWscControl->EntryIfIdx & 0x0F), NULL, 0, AP_MODE);
 	WscBuildProbeRespIE(pAd, WSC_MSGTYPE_AP_WLAN_MGR, IsAPConfigured, TRUE, WscMode, pWscControl->WscConfigMethods, pWscControl->EntryIfIdx, NULL, 0, AP_MODE);

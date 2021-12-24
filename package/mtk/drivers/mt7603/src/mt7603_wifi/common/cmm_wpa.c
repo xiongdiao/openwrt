@@ -2708,7 +2708,9 @@ VOID WPAStart2WayGroupHS(
 	DBGPRINT(RT_DEBUG_TRACE, ("===> WPAStart2WayGroupHS\n"));
 
     if ((!pEntry) || !IS_ENTRY_CLIENT(pEntry))
+    {
         return;
+    }
 
 	/* delete retry timer*/
 	RTMPCancelTimer(&pEntry->RetryTimer, &Cancelled);
@@ -2719,9 +2721,13 @@ VOID WPAStart2WayGroupHS(
 		UCHAR	apidx = 0;
 
 		if (pEntry->func_tb_idx >= pAd->ApCfg.BssidNum)
+        {
 			return;
+        }
 	    else
+        {
 			apidx = pEntry->func_tb_idx;
+        }
 
 		group_cipher = pAd->ApCfg.MBSSID[apidx].wdev.GroupKeyWepStatus;
 		default_key = pAd->ApCfg.MBSSID[apidx].wdev.DefaultKeyId;

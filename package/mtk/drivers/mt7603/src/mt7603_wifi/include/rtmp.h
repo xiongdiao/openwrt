@@ -5181,6 +5181,7 @@ MONITOR_STRUCT monitor_ctrl;
 
 /*=========AP=========== */
 #ifdef CONFIG_AP_SUPPORT
+//#if TRUE
 	/* ----------------------------------------------- */
 	/* AP specific configuration & operation status */
 	/* used only when pAd->OpMode == OPMODE_AP */

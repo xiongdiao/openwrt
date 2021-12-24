@@ -76,12 +76,14 @@
 #define MAX_NUM_OF_INF               2
 
 #ifndef CONFIG_RT_FIRST_IF_RF_OFFSET
-#define CONFIG_RT_FIRST_IF_RF_OFFSET DEFAULT_RF_OFFSET
+#define CONFIG_RT_FIRST_IF_RF_OFFSET 0x0
 #endif
 
 #ifndef CONFIG_RT_SECOND_IF_RF_OFFSET
-#define CONFIG_RT_SECOND_IF_RF_OFFSET DEFAULT_RF_OFFSET
+#define CONFIG_RT_SECOND_IF_RF_OFFSET 0x8000 
 #endif
+
+extern int (*ra_sw_nat_hook_rx)(VOID *skb);
 
 struct dev_type_name_map_t {
 	INT type;
@@ -689,7 +691,7 @@ NDIS_STATUS	RTMPReadParametersHook(RTMP_ADAPTER *pAd)
 		{
 #ifndef OS_ABL_SUPPORT
 			// TODO: need to roll back when convert into OSABL code
-				 fsize = (ULONG)srcf->f_dentry->d_inode->i_size;
+				 fsize = (ULONG)srcf->f_path.dentry->d_inode->i_size;
 				if (buf_size < (fsize + 1))
 					buf_size = fsize + 1;
 #endif /* OS_ABL_SUPPORT */

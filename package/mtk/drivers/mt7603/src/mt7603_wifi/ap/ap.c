@@ -3721,8 +3721,10 @@ BOOLEAN DOT1X_InternalCmdAction(
 	UCHAR			s_addr[MAC_ADDR_LEN];
 	UCHAR			EAPOL_IE[] = {0x88, 0x8e};
 	UINT8			frame_len = LENGTH_802_3 + sizeof(RalinkIe);
-	UCHAR			FrameBuf[frame_len];
+	//UCHAR			FrameBuf[frame_len];
+	UCHAR			*FrameBuf;
 	UINT8			offset = 0;
+    FrameBuf = (UCHAR *)kmalloc(sizeof(UINT8)*frame_len, GFP_ATOMIC);
 
 	/* Init the frame buffer */
 	NdisZeroMemory(FrameBuf, frame_len);
@@ -3754,10 +3756,14 @@ BOOLEAN DOT1X_InternalCmdAction(
 
 	/* Report to upper layer */
 	if (RTMP_L2_FRAME_TX_ACTION(pAd, apidx, FrameBuf, frame_len) == FALSE)
+    {
+        kfree(FrameBuf);
 		return FALSE;
+    }
 
 	DBGPRINT(RT_DEBUG_TRACE, ("%s done. (cmd=%d)\n", __FUNCTION__, cmd));
 
+    kfree(FrameBuf);
 	return TRUE;
 }
 
@@ -3782,9 +3788,11 @@ BOOLEAN DOT1X_EapTriggerAction(RTMP_ADAPTER *pAd, MAC_TABLE_ENTRY *pEntry)
 	INT				apidx = MAIN_MBSSID;
 	UCHAR 			eapol_start_1x_hdr[4] = {0x01, 0x01, 0x00, 0x00};
 	UINT8			frame_len = LENGTH_802_3 + sizeof(eapol_start_1x_hdr);
-	UCHAR			FrameBuf[frame_len+32];
+	//UCHAR			FrameBuf[frame_len+32];
+	UCHAR			*FrameBuf;
 	UINT8			offset = 0;
 
+    FrameBuf = (UCHAR *)kmalloc(sizeof(UINT8)*frame_len, GFP_ATOMIC);
     if((pEntry->AuthMode == Ndis802_11AuthModeWPA) || (pEntry->AuthMode == Ndis802_11AuthModeWPA2) || (pAd->ApCfg.MBSSID[apidx].wdev.IEEE8021X == TRUE))
 	{
 		/* Init the frame buffer */
@@ -3818,12 +3826,14 @@ BOOLEAN DOT1X_EapTriggerAction(RTMP_ADAPTER *pAd, MAC_TABLE_ENTRY *pEntry)
 #endif	
 		/* Report to upper layer */
 		if (RTMP_L2_FRAME_TX_ACTION(pAd, apidx, FrameBuf, frame_len) == FALSE)
+          kfree(FrameBuf);
 			return FALSE;
 
 		DBGPRINT(RT_DEBUG_TRACE, ("Notify 8021.x daemon to trigger EAP-SM for this sta(%02x:%02x:%02x:%02x:%02x:%02x)\n", PRINT_MAC(pEntry->Addr)));
 
 	}
 
+    kfree(FrameBuf);
 	return TRUE;
 }
 
