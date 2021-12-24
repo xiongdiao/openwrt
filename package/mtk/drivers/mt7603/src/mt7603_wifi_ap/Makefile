@@ -1,12 +1,13 @@
-$(warning "============================ mt7603_wifi_ap =======================================")
-
+$(waring "=================================mt7603_wifi_ap ========================================")
 ifeq ($(CONFIG_SUPPORT_OPENWRT),y)
+$(waring "=================================mt7603_wifi_ap 1========================================")
 ccflags-y = -I$(src)/../mt7603_wifi/include \
 		-I$(src)/../mt7603_wifi/ate/include
 DRV_NAME = mt7603
 RT_WIFI_DIR = ../mt7603_wifi
 
 else
+$(waring "=================================mt7603_wifi_ap 2========================================")
 ccflags-y = -Idrivers/net/wireless/mtk/mt7603e/mt7603_wifi/include \
 		-Idrivers/net/wireless/mtk/mt7603e/mt7603_wifi/ate/include
 #EXTRA_CFLAGS = -Idrivers/net/wireless/mtk/mt7603e/mt7603_wifi/include \
@@ -919,8 +920,6 @@ endif
 # Root 
 #
 obj-$(CONFIG_MT7603E_RLT_AP_SUPPORT) += $(DRV_NAME).o
-
-$(warning "============================ DRV_NAME is $(DRV_NAME) =======================================")
 
 $(DRV_NAME)-objs += $(ap_objs) $(cmm_objs) $(asic_objs) $(chip_objs) $(rate_objs) $(inf_objs)\
                     $(spec_objs) $(func_objs) $(os_objs)

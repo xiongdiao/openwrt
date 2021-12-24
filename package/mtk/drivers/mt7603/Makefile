@@ -6,6 +6,7 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
+$(waring "=================================mt7603========================================")
 PKG_NAME:=mt7603
 PKG_VERSION:=gerrit
 #PKG_SOURCE:=MT7603e_LinuxAP_V4.1.2.1_20190503-ac1d3fab.tar.bz2
@@ -54,6 +55,10 @@ endef
 #	@echo "this package is built with kernel"
 #endef
 
+NOSTDINC_FLAGS := \
+	$(KERNEL_NOSTDINC_FLAGS) \
+	-I$(PKG_BUILD_DIR)/mt7603_wifi/include\
+
 PKG_MAKE_FLAGS += CONFIG_WIFI_MT7603E=y 
 PKG_MAKE_FLAGS += CONFIG_MT7603E_RALINK_MT7603E=y 
 PKG_MAKE_FLAGS += CONFIG_MT7603E_RLT_WIFI=y 
@@ -66,7 +71,6 @@ define Build/Compile
 		M="$(PKG_BUILD_DIR)" \
 		NOSTDINC_FLAGS="$(NOSTDINC_FLAGS)" \
 		modules
-	$(warning "================================= PKG_MAKE_FLAGS is $(PKG_MAKE_FLAGS) =================================" )
 endef
 
 define Package/mt7603-scripts

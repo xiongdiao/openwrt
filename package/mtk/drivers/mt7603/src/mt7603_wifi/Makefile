@@ -40,7 +40,7 @@ include $(RT28xx_DIR)/os/linux/config.mk
 RTMP_SRC_DIR = $(RT28xx_DIR)/RT$(MODULE)
 
 #PLATFORM: Target platform
-PLATFORM = PC
+#PLATFORM = PC
 #PLATFORM = MT53XX
 #PLATFORM = PC_AUTO_BUILD
 #PLATFORM = BB_SOC
@@ -98,6 +98,7 @@ endif
 ifeq ($(CHIPSET),mt7628)
 PLATFORM = MT7628
 endif
+PLATFORM = MT7621
 
 #RELEASE Package
 RELEASE = DPA
