@@ -47,7 +47,7 @@ endef
 
 
 define Package/wifi-kconfig-hack
-  HIDDEN:=1
+  #HIDDEN:=1
   SECTION:=MTK Properties
   CATEGORY:=MTK Properties
   SUBMENU:=Misc
@@ -84,6 +84,11 @@ endef
 define Package/wifi-l1profile/install
 	$(INSTALL_DIR) $(1)/etc/wireless/
 	python ./make-l1profile.py $(TOPDIR)/.config $(1)/etc/wireless/l1profile.dat
+endef
+
+define Package/wifi-kconfig-hack/install
+	#$(INSTALL_DIR) $(1)/etc/wireless/
+	#python ./make-l1profile.py $(TOPDIR)/.config $(1)/etc/wireless/l1profile.dat
 endef
 
 $(eval $(call BuildPackage,wifi-kconfig-hack))

@@ -38,7 +38,7 @@ define KernelPackage/mt7603-ko
   SUBMENU:=Drivers
   TITLE:=MT7603e BUILD_KO
   DEPENDS:=+mt7603-scripts
-  #FILES:=$(LINUX_DIR)/drivers/net/wireless/mtk/mt7603/mt7603_wifi_ap/mt7603.ko
+  FILES:=$(PKG_BUILD_DIR)/mt7603_wifi_ap/mt7603.ko
   AUTOLOAD:=$(call AutoProbe,mt7603)
 endef
 
@@ -72,6 +72,11 @@ PKG_MAKE_FLAGS += CONFIG_MT7603E_RLT_AP_SUPPORT=m
 PKG_MAKE_FLAGS += CONFIG_MT7603E_WSC_INCLUDED=y
 PKG_MAKE_FLAGS += CONFIG_RT_SECOND_IF_RF_OFFSET=0x8000 
 PKG_MAKE_FLAGS += CONFIG_RT_FIRST_IF_RF_OFFSET=0x0
+PKG_MAKE_FLAGS += CONFIG_MT7603E_NEW_RATE_ADAPT_SUPPORT=y
+PKG_MAKE_FLAGS += CONFIG_MT7603E_RTMP_PCI_SUPPORT=y
+PKG_MAKE_FLAGS += CONFIG_MT7603E_MAC_REPEATER_SUPPORT=y
+
+
 define Build/Compile
 	$(warning "================================= start call Compile========================================")
 	+$(MAKE) $(PKG_JOBS) -C "$(LINUX_DIR)" \

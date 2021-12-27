@@ -1,6 +1,8 @@
 $(warning "=================================mt7603_wifi_ap ========================================")
+$(warning "==============  CONFIG_WIFI_MT7603E=$(CONFIG_WIFI_MT7603E)  CONFIG_MT7603E_RALINK_MT7603E=$(CONFIG_MT7603E_RALINK_MT7603E)  CONFIG_MT7603E_RLT_WIFI=$(CONFIG_MT7603E_RLT_WIFI)  CONFIG_MT7603E_MT_MAC=$(CONFIG_MT7603E_MT_MAC)  CONFIG_MT7603E_RLT_AP_SUPPORT=$(CONFIG_MT7603E_RLT_AP_SUPPORT) CONFIG_SUPPORT_OPENWRT=$(CONFIG_SUPPORT_OPENWRT) CONFIG_MT7603E_APCLI_SUPPORT=$(CONFIG_MT7603E_APCLI_SUPPORT) CONFIG_MT7603E_DOT11N_DRAFT3=$(CONFIG_MT7603E_DOT11N_DRAFT3) CONFIG_MT7603E_RLT_AP_SUPPORT=$(CONFIG_MT7603E_RLT_AP_SUPPORT) CONFIG_MT7603E_WSC_INCLUDED=$(CONFIG_MT7603E_WSC_INCLUDED) CONFIG_RT_SECOND_IF_RF_OFFSET=$(CONFIG_RT_SECOND_IF_RF_OFFSET)  CONFIG_RT_FIRST_IF_RF_OFFSET=$(CONFIG_RT_FIRST_IF_RF_OFFSET)    =============")
+
+
 ifeq ($(CONFIG_SUPPORT_OPENWRT),y)
-$(warning "=================================mt7603_wifi_ap 1========================================")
 ccflags-y = -I$(src)/../mt7603_wifi/include \
 		-I$(src)/../mt7603_wifi/ate/include
 DRV_NAME = mt7603
@@ -394,7 +396,6 @@ ifeq ($(CONFIG_MT7603E_ACL_V2_SUPPORT),y)
     spec_objs += $(RT_WIFI_DIR)/ap/ap_acl_v2.o
 endif
 
-
 #
 # Common Feature related files
 #
@@ -437,7 +438,6 @@ ifeq ($(CONFIG_MT7603E_LED_CONTROL_SUPPORT),y)
 
     func_objs += $(RT_WIFI_DIR)/common/rt_led.o
 endif
-
 
 ########################################################
 # AP feature related files
@@ -492,6 +492,8 @@ ifeq ($(CONFIG_MIXMODE_SUPPORT),y)
 
     ap_objs += $(RT_WIFI_DIR)/ap/ap_mix_mode.o
 endif
+
+
 ifeq ($(CONFIG_MT7603E_APCLI_SUPPORT),y)
     EXTRA_CFLAGS += -DAPCLI_SUPPORT -DMAT_SUPPORT -DTRAFFIC_BASED_TXOP -DAPCLI_AUTO_CONNECT_SUPPORT
     ifeq ($(CONFIG_RALINK_MT7620),y)
@@ -1045,9 +1047,12 @@ ifeq ($(CONFIG_MT7603E_NEW_BW2040_COEXIST_SUPPORT),y)
 endif
 
 EXTRA_CFLAGS += -DAPCLI_CERT_SUPPORT
+EXTRA_CFLAGS += -DNEW_RATE_ADAPT_SUPPORT
+#EXTRA_CFLAGS += -DDBG
 
 MODULE_FLAGS=$(EXTRA_CFLAGS)
 export MODULE_FLAGS
 obj-m+=$(RT_WIFI_DIR)/tools/plug_in/
 
+$(warning "=================================EXTRA_CFLAGS is $(EXTRA_CFLAGS) ========================================")
 $(warning "=================================MODULE_FLAGS is $(MODULE_FLAGS) ========================================")
