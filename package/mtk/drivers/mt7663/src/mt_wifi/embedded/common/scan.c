@@ -363,7 +363,9 @@ static INT scan_active(RTMP_ADAPTER *pAd, UCHAR OpMode, UCHAR ScanType, struct w
 		|| ((ScanType == SCAN_WSC_ACTIVE) && (OpMode == OPMODE_STA))
 #endif /* WSC_STA_SUPPORT */
 	   )
+    {
 		SsidLen = ScanCtrl->SsidLen;
+    }
 
 		MgtMacHeaderInitExt(pAd, &Hdr80211, SUBTYPE_PROBE_REQ, 0, BROADCAST_ADDR,
 							wdev->if_addr, BROADCAST_ADDR);
@@ -1149,7 +1151,7 @@ VOID sta_2040_coex_scan_check(RTMP_ADAPTER *pAd, struct wifi_dev *wdev)
 		/* Check both APCLI and Repeater Entries. If Any of the Entries traffic
 		is high.Then skip the 20-40 Scan */
 		for (i = 0; VALID_UCAST_ENTRY_WCID(pAd, i); i++) {
-			PMAC_TABLE_ENTRY pEntry = &pAd->MacTab.Content[i];
+			pEntry = &pAd->MacTab.Content[i];
 
 			if (pEntry && (MAC_ADDR_EQUAL(pEntry->Addr, wdev->bssid))
 				&& (wdev->channel <=  14) && (IS_ENTRY_PEER_AP(pEntry) || IS_ENTRY_REPEATER(pEntry))
@@ -1157,11 +1159,11 @@ VOID sta_2040_coex_scan_check(RTMP_ADAPTER *pAd, struct wifi_dev *wdev)
 
 				if (pEntry->one_sec_tx_succ_pkts > 70) {
 					skip_20_40_scan = 1;
-					MTWF_LOG(DBG_CAT_MLME, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("!!!!!! skip_20_40_scan %d !!!!!!\n",
+					MTWF_LOG(DBG_CAT_MLME, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("!!!!!! skip_20_40_scan %ld !!!!!!\n",
 						pEntry->one_sec_tx_succ_pkts));
 					break;
 				}
-			MTWF_LOG(DBG_CAT_MLME, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("Last_Sec_Tx_Count %d Rept=%d\n",
+			MTWF_LOG(DBG_CAT_MLME, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("Last_Sec_Tx_Count %ld Rept=%d\n",
 				pEntry->one_sec_tx_succ_pkts, IS_ENTRY_REPEATER(pEntry)));
 		 }
 	}

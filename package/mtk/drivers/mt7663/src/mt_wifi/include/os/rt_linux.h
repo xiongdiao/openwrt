@@ -560,7 +560,7 @@ typedef spinlock_t			OS_NDIS_SPIN_LOCK;
 #ifdef CONFIG_PREEMPT_RCU
 #define RT_GET_OS_PID(_x, _y)
 #else /* else CONFIG_PREEMPT_RCU */
-#define RT_GET_OS_PID(_x, _y)		do {rcu_read_lock(); _x = current->pids[PIDTYPE_PID].pid; rcu_read_unlock(); } while (0)
+#define RT_GET_OS_PID(_x, _y)		do {rcu_read_lock(); _x = current->thread_pid; rcu_read_unlock(); } while (0)
 #endif /* CONFIG_PREEMPT_RCU */
 #define RTMP_GET_OS_PID(_a, _b)			RT_GET_OS_PID(_a, _b)
 #endif /* OS_ABL_FUNC_SUPPORT */
@@ -598,8 +598,11 @@ typedef struct tasklet_struct  *POS_NET_TASK_STRUCT;
 typedef struct timer_list	OS_NDIS_MINIPORT_TIMER;
 typedef struct timer_list	OS_TIMER;
 
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4,14,0)
 typedef void (*TIMER_FUNCTION)(unsigned long);
-
+#else
+typedef void (*TIMER_FUNCTION)(struct timer_list *);
+#endif
 
 #define OS_WAIT(_time) \
 	{	\
@@ -762,8 +765,10 @@ void linux_pci_unmap_single(void *handle, ra_dma_addr_t dma_addr, size_t size, i
 #define PCI_MAP_SINGLE_DEV(_pAd, _ptr, _size, _sd_idx, _dir)				\
 	linux_pci_map_single(((POS_COOKIE)(_pAd->OS_Cookie))->pDev, _ptr, _size, _sd_idx, _dir)
 
+/*
 #define DMA_MAPPING_ERROR(_handle, _ptr)	\
 	dma_mapping_error(&((struct pci_dev *)(_handle))->dev, _ptr)
+*/
 
 #define PCI_UNMAP_SINGLE(_pAd, _ptr, _size, _dir)						\
 	linux_pci_unmap_single(((POS_COOKIE)(_pAd->OS_Cookie))->pDev, _ptr, _size, _dir)

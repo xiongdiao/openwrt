@@ -593,7 +593,6 @@ static VOID sta_mlme_assoc_req_action(
 	ULONG tmp;
 	USHORT VarIesOffset = 0;
 	USHORT Status;
-	ULONG temp;
 	struct wifi_dev *wdev = Elem->wdev;
 	PSTA_ADMIN_CONFIG pStaCfg = GetStaCfgByWdev(pAd, Elem->wdev);
 	MAC_TABLE_ENTRY *pAPEntry = GetAssociatedAPByWdev(pAd, Elem->wdev);
@@ -602,6 +601,9 @@ static VOID sta_mlme_assoc_req_action(
 	UCHAR SupRateIe = IE_SUPP_RATES;
 	UCHAR ExtRateIe = IE_EXT_SUPP_RATES;
 	UCHAR CliIdx = Elem->priv_data.rept_cli_idx;
+#ifdef APCLI_CONNECTION_TRIAL
+	ULONG temp;
+#endif
 #ifdef MAC_REPEATER_SUPPORT
 	USHORT ifIndex = wdev->func_idx;
 	REPEATER_CLIENT_ENTRY *pReptEntry = Elem->priv_data.rept_cli_entry;

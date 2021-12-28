@@ -2705,6 +2705,7 @@ static INT32 MT_ATEInitBandInfo(RTMP_ADAPTER *pAd, UINT32 band_idx)
 	return ret;
 }
 
+#if 0
 static INT32 MT_ATEStopTXFromUpperLayer(RTMP_ADAPTER *pAd)
 {
 	INT32 Ret = 0;
@@ -2755,6 +2756,7 @@ static INT32 MT_ATEStopTXFromUpperLayer(RTMP_ADAPTER *pAd)
 
 	return Ret;
 }
+#endif
 
 static INT32 MT_ATEStart(RTMP_ADAPTER *pAd)
 {
@@ -3126,15 +3128,17 @@ static INT32 MT_ATEStop(RTMP_ADAPTER *pAd)
 	RTMP_OS_NETDEV_START_QUEUE(pAd->net_dev);
 #ifdef CONFIG_AP_SUPPORT
 	IF_DEV_CONFIG_OPMODE_ON_AP(pAd) {
-	if (MaxNumBss > MAX_MBSSID_NUM(pAd))
-		MaxNumBss = MAX_MBSSID_NUM(pAd);
+        if (MaxNumBss > MAX_MBSSID_NUM(pAd))
+        {
+            MaxNumBss = MAX_MBSSID_NUM(pAd);
+        }
 
 		/*  first IdBss must not be 0 (BSS0), must be 1 (BSS1) */
-		for (IdBss = FIRST_MBSSID;
-			IdBss < MAX_MBSSID_NUM(pAd); IdBss++) {
+		for (IdBss = FIRST_MBSSID; IdBss < MAX_MBSSID_NUM(pAd); IdBss++) {
 			if (pAd->ApCfg.MBSSID[IdBss].wdev.if_dev)
-				RTMP_OS_NETDEV_START_QUEUE(
-					pAd->ApCfg.MBSSID[IdBss].wdev.if_dev);
+            {
+				RTMP_OS_NETDEV_START_QUEUE( pAd->ApCfg.MBSSID[IdBss].wdev.if_dev);
+            }
 		}
 	}
 #endif

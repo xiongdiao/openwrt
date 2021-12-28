@@ -258,9 +258,10 @@ INT32 SetATERxFilter(RTMP_ADAPTER *pAd, RTMP_STRING *arg)
 	UCHAR control_band_idx = ATECtrl->control_band_idx;
 	const INT param_num = 3;
 	MT_RX_FILTER_CTRL_T rx_filter;
-	UINT32 input[param_num];
+	UINT32 *input = NULL;
 	CHAR *value;
 	INT i;
+    input = (UINT32*)kmalloc(sizeof(UINT32)*param_num, GFP_ATOMIC);
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("%s: Parm = %s\n", __func__, arg));
@@ -285,6 +286,7 @@ INT32 SetATERxFilter(RTMP_ADAPTER *pAd, RTMP_STRING *arg)
 			 ("%s: Promiscuous:%x, FrameReport:%x, filterMask:%x\n",
 			  __func__, rx_filter.bPromiscuous, rx_filter.bFrameReport, rx_filter.filterMask));
 
+    kfree(input);
 	return TRUE;
 }
 
@@ -332,9 +334,11 @@ INT32 SetATEMACTRx(RTMP_ADAPTER *pAd, RTMP_STRING *arg)
 	INT32 Ret = 0;
 	UCHAR control_band_idx = ATECtrl->control_band_idx;
 	const INT param_num = 3;
-	UINT32 input[param_num];
+	UINT32 *input= NULL;
 	CHAR *value;
 	INT i;
+
+    input = (UINT32 *)kmalloc(sizeof(UINT32)*param_num, GFP_ATOMIC);
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 			 ("%s: Parm = %s\n", __func__, arg));
@@ -351,6 +355,7 @@ INT32 SetATEMACTRx(RTMP_ADAPTER *pAd, RTMP_STRING *arg)
 
 	Ret = MtATESetMacTxRx(pAd, input[0], input[1], control_band_idx);
 
+    kfree(input);
 	if (!Ret)
 		return TRUE;
 	else
@@ -957,13 +962,14 @@ INT32 SetATETxAntenna(RTMP_ADAPTER *pAd, RTMP_STRING *Arg)
 	UCHAR control_band_idx = ATECtrl->control_band_idx;
 	UINT32 Ant = 1;
 	const INT idx_num = 2;
-	UINT32 param[idx_num];
+	UINT32 *param;
 	UINT8 loop_index = 0;
 	CHAR *value;
 #if defined(MT7615) || defined(MT7622) || defined(P18) || defined(MT7663) || defined(AXE) || defined(MT7626)
 	UINT32 mode = 0;
 #endif
 
+    param = (UINT32*)kmalloc(sizeof(UINT32)*idx_num, GFP_ATOMIC);
 	/* Sanity check for input parameter */
 	if (Arg == NULL) {
 		MTWF_LOG(DBG_CAT_ALL, DBG_SUBCAT_ALL, DBG_LVL_ERROR,
@@ -1011,9 +1017,13 @@ INT32 SetATETxAntenna(RTMP_ADAPTER *pAd, RTMP_STRING *Arg)
 	Ret = ATEOp->SetTxAntenna(pAd, Ant);
 
 	if (!Ret)
+    {
+        kfree(param);
 		return TRUE;
+    }
 
 err0:
+    kfree(param);
 	return FALSE;
 }
 
@@ -4657,8 +4667,8 @@ INT32 SetATEConTxETxBfInitProc(
 	/* Trigger Periodical Sounding packet */
 	Set_Trigger_Sounding_Proc(pAd, "02:01:FF:01:00:00:00");
 	return status;
-err0:
-	return FALSE;
+//err0:
+//	return FALSE;
 }
 
 
@@ -4939,7 +4949,7 @@ INT32 SetATEConTxETxBfGdProc(
 	SetATE(pAd, "RXFRAME");
 	/* ATE MAC TRx configuration */
 	MtATESetMacTxRx(pAd, 6, 1, control_band_idx); /* ENUM_ATE_MAC_RX_RXV: MAC to PHY Rx Enable */
-err0:
+//err0:
 	return status;
 }
 
@@ -5767,9 +5777,11 @@ INT32 SetATEChannel(
 	struct _ATE_CTRL *ATECtrl = &(pAd->ATECtrl);
 	struct _ATE_OPERATION *ATEOp = ATECtrl->ATEOp;
 	UCHAR control_band_idx = ATECtrl->control_band_idx;
-	UINT32 param[idx_num];
+    UINT32 *param = NULL;
 	INT i = 0;
 	CHAR *value;
+
+    param = (UINT32*)kmalloc(sizeof(UINT32)*idx_num, GFP_ATOMIC);
 
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 		("%s: control_band_idx:%x, Channel = %s\n",
@@ -5802,6 +5814,7 @@ INT32 SetATEChannel(
 #endif
 	Ret = ATEOp->SetChannel(pAd, param[0], param[2], 0, param[1]);
 
+    kfree(param);
 	if (!Ret)
 		return TRUE;
 	else
@@ -5820,10 +5833,11 @@ INT32 SetATETxBw(
 	INT32 Ret = 0;
 	UINT16 system_bw, per_pkt_bw;
 	const INT idx_num = 2;
-	UINT32 param[idx_num];
+	UINT32 *param = NULL;
 	INT i = 0;
 	CHAR *value;
 
+    param = (UINT32*)kmalloc(sizeof(UINT32)*idx_num, GFP_ATOMIC);
 	MTWF_LOG(DBG_CAT_TEST, DBG_SUBCAT_ALL, DBG_LVL_OFF,
 		("%s: Bw = %s\n", __func__, Arg));
 
@@ -5842,6 +5856,7 @@ INT32 SetATETxBw(
 
 	Ret = ATEOp->SetBW(pAd, system_bw, per_pkt_bw);
 
+    kfree(param);
 	if (!Ret)
 		return TRUE;
 	else

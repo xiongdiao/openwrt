@@ -273,6 +273,7 @@ typedef struct GNU_PACKED _TMAC_TXD_1 {
 			break;\
 		case TMI_HDR_FT_ENH_80211:\
 			(_val) = TMI_HDR_INFO_3_VAL((_eosp), (_ams));\
+            break;\
 		default:\
 			(_val) = 0;\
 		} \

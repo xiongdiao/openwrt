@@ -121,15 +121,20 @@ VOID operate_loader_trx_stream(struct wifi_dev *wdev, struct wlan_operate *op, U
 	switch (cur_op_rx_stream) {
 	case 4:
 		op->ht_status.ht_cap_ie.MCSSet[3] =  0xff;
-
+		op->ht_status.ht_cap_ie.MCSSet[2] =  0xff;
+		op->ht_status.ht_cap_ie.MCSSet[1] =  0xff;
+		op->ht_status.ht_cap_ie.MCSSet[0] =  0xff;
+        break;
 	case 3:
 		op->ht_status.ht_cap_ie.MCSSet[2] =  0xff;
-
+		op->ht_status.ht_cap_ie.MCSSet[1] =  0xff;
+		op->ht_status.ht_cap_ie.MCSSet[0] =  0xff;
+        break;
 	case 2:
 		op->ht_status.ht_cap_ie.MCSSet[1] =  0xff;
-
+		op->ht_status.ht_cap_ie.MCSSet[0] =  0xff;
+        break;
 	case 1:
-
 	default:
 		op->ht_status.ht_cap_ie.MCSSet[0] =  0xff;
 	}

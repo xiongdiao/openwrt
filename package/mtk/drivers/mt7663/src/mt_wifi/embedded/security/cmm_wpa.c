@@ -1300,7 +1300,8 @@ VOID MlmeDeAuthAction(
 			&& pAd->MacTab.tr_entry[pEntry->wcid].PortSecured == WPA_802_1X_PORT_SECURED) {
 			ULONG	TmpLen;
 			UINT	res_len = LEN_CCMP_HDR + LEN_CCMP_MIC;
-			UCHAR	res_buf[res_len];
+			UCHAR	*res_buf = NULL;
+            res_buf = (UCHAR *)kmalloc(sizeof(UCHAR)*res_len, GFP_ATOMIC);
 			/* reserve a buffer for PMF CCMP calculation later */
 			MakeOutgoingFrame(pOutBuffer + FrameLen,	&TmpLen,
 							  res_len,				res_buf,
@@ -4923,7 +4924,7 @@ VOID WPABuildPairMsg4(
 #ifdef CONFIG_STA_SUPPORT
 #ifdef CONFIG_OWE_SUPPORT
 	if (IS_AKM_OWE(pSecConfig->AKMMap)) {
-		INT CachedIdx;
+		//INT CachedIdx;
 		OWE_INFO *owe = &pEntry->SecConfig.owe;
 		UCHAR CliIdx = 0xff;
 		PSTA_ADMIN_CONFIG pStaCfg = GetStaCfgByWdev(pAd, pEntry->wdev);

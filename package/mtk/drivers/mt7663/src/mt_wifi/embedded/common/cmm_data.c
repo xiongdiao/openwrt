@@ -6728,7 +6728,7 @@ INT wdev_tx_pkts(NDIS_HANDLE dev_hnd, PPNDIS_PACKET pkt_list, UINT pkt_cnt, stru
 {
 	RTMP_ADAPTER *pAd = (RTMP_ADAPTER *)dev_hnd;
 	PNDIS_PACKET pPacket;
-	UCHAR wcid = MAX_LEN_OF_MAC_TABLE;
+	//UCHAR wcid = MAX_LEN_OF_MAC_TABLE;
 	UINT Index;
 #ifdef A4_CONN
 	INT Ret = 0;

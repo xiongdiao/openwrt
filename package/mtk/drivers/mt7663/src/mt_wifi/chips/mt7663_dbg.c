@@ -203,10 +203,32 @@ static INT32 chip_dump_mib_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 	UINT8 bss_nums = pChipCap->BssNums;
 	UINT32 mac_val, mac_val1, idx, band_idx = 0, band_offset = 0, ampdu_cnt[7];
 	UINT32 msdr6, msdr7, msdr8, msdr9, msdr10, msdr16, msdr17, msdr18, msdr19, msdr20, msdr21;
-	UINT32 mbxsdr[bss_nums][4];
 	UINT32 mbtcr[16], mbtbcr[16], mbrcr[16], mbrbcr[16];
-	UINT32 btcr[bss_nums], btbcr[bss_nums], brcr[bss_nums], brbcr[bss_nums], btdcr[bss_nums], brdcr[bss_nums];
 	UINT32 mu_cnt[5];
+	//UINT32 mbxsdr[bss_nums][4];
+	//UINT32 btcr[bss_nums], btbcr[bss_nums], brcr[bss_nums], brbcr[bss_nums], btdcr[bss_nums], brdcr[bss_nums];
+    const INT32  count = 4;
+    INT32 i = 0;
+    UINT32 **mbxsdr = NULL;
+    UINT32 *btcr  = NULL;
+    UINT32 *btbcr = NULL;
+    UINT32 *brcr  = NULL;
+    UINT32 *brbcr = NULL;
+    UINT32 *btdcr = NULL;
+    UINT32 *brdcr = NULL;
+
+    mbxsdr = (UINT32 **)kmalloc(sizeof(UINT32*)*bss_nums, GFP_ATOMIC);
+    for(i=0; i<bss_nums; i++)
+    {
+        mbxsdr[i] = (UINT32 *)kmalloc(sizeof(UINT32)*count, GFP_ATOMIC);
+    }
+    btcr  = (UINT32 *)kmalloc(sizeof(UINT32)*bss_nums, GFP_ATOMIC);
+    btbcr = (UINT32 *)kmalloc(sizeof(UINT32)*bss_nums, GFP_ATOMIC);
+    brcr  = (UINT32 *)kmalloc(sizeof(UINT32)*bss_nums, GFP_ATOMIC);
+    brbcr = (UINT32 *)kmalloc(sizeof(UINT32)*bss_nums, GFP_ATOMIC);
+    btdcr = (UINT32 *)kmalloc(sizeof(UINT32)*bss_nums, GFP_ATOMIC);
+    brdcr = (UINT32 *)kmalloc(sizeof(UINT32)*bss_nums, GFP_ATOMIC);
+    
 
 	for (band_idx = 0; band_idx < pChipCap->band_cnt; band_idx++) {
 		if (arg != NULL && band_idx != simple_strtoul(arg, 0, 10))
@@ -368,6 +390,19 @@ static INT32 chip_dump_mib_info(struct hdev_ctrl *ctrl, RTMP_STRING *arg)
 	pAd->u4TcpRxAckCnt = 0;
 	pAd->u4TcpTxDataCnt = 0;
 #endif /* TRACELOG_TCP_PKT */
+
+    kfree(brdcr);
+    kfree(btdcr);
+    kfree(brbcr);
+    kfree(brcr);
+    kfree(btbcr);
+    kfree(btcr);
+
+    for(i=0; i<bss_nums; i++)
+    {
+        kfree(mbxsdr[i]);
+    }
+    kfree(mbxsdr);
 	return TRUE;
 }
 

@@ -34,9 +34,10 @@ static VOID OceResetScanIndication(
 	PVOID SystemSpecific2,
 	PVOID SystemSpecific3)
 {
-	INT loop, OceNonOcePresentOldValue, OceBOnlyPresentOldValue;
+	INT OceNonOcePresentOldValue, OceBOnlyPresentOldValue;
 	P_OCE_CTRL pOceCtrl = NULL;
-	struct wifi_dev *wdev = (RTMP_ADAPTER *)FunctionContext;
+	//struct wifi_dev *wdev = (RTMP_ADAPTER *)FunctionContext;
+	struct wifi_dev *wdev = (struct wifi_dev *)FunctionContext;
 	struct _RTMP_ADAPTER *ad = wdev->sys_handle;
 	BOOLEAN Cancelled;
 
@@ -187,6 +188,7 @@ OCE_ERR_CODE OceDeInit(
 
 		RTMPCancelTimer(&pAd->ApCfg.FdFrameTimer, &Cancelled);
 	}
+	return OCE_SUCCESS;
 }
 
 OCE_ERR_CODE OceRelease(
@@ -225,7 +227,10 @@ OCE_ERR_CODE OceInsertAttrById(
 	OCE_ATTR_STRUCT OceAttr;
 	PUINT8 pAttrBufOffset = (pAttrBuf + *pAttrTotalLen);
 	UINT16 OverflowChk = 0;
-
+    BSS_STRUCT *pMbss = NULL;
+    UINT16 i;
+    ULONG ReadOffset = 0;
+            
 	if (wdev) {
 		pOceCtrl = &wdev->OceCtrl;
 	} else {
@@ -262,7 +267,6 @@ OCE_ERR_CODE OceInsertAttrById(
 		break;
 	case OCE_ATTR_AP_RNR_COMPLETE:
 		OceAttr.AttrID = OCE_ATTR_AP_RNR_COMPLETE;
-		BSS_STRUCT *pMbss = NULL;
 
 		if (wdev->wdev_type == WDEV_TYPE_AP)
 			pMbss = wdev->func_dev;
@@ -270,8 +274,6 @@ OCE_ERR_CODE OceInsertAttrById(
 		/*Short SSID List*/
 		if (pMbss && pMbss->ReducedNRListExist && (pMbss->ReducedNRListInfo.ValueLen)) {
 			OceAttr.AttrLen = pMbss->ReducedNRListInfo.ValueLen/OCE_RNR_IE_LEN;
-			UINT16 i;
-			ULONG ReadOffset = 0;
 
 			for (i = 0; i < OceAttr.AttrLen; i++) {
 				/* 13 = OCE_RNR_IE_LEN - OCE_SHORT_SSID_LEN*/
@@ -745,16 +747,16 @@ INT build_esp_element(RTMP_ADAPTER *pAd, struct wifi_dev *wdev, UCHAR *buf)
 	UINT i, CurrTxop, ScanTxop = 0;
 	BSS_TABLE *ScanTab = get_scan_tab_by_wdev(pAd, wdev);
 	P_OCE_CTRL pOceCtrl = NULL;
+	ULONG TmpLen;
+	UCHAR operating_ie = IE_WLAN_EXTENSION, ext_ie = IE_EXTENSION_ID_ESP, operating_len = 4;
+	ESP_INFO EspInfo;
+	QLOAD_CTRL *pQloadCtrl = HcGetQloadCtrl(pAd);
 
 	pOceCtrl = &wdev->OceCtrl;
 
 	if (!pOceCtrl->bApEspEnable)
 		return 0;
 
-	ULONG TmpLen;
-	UCHAR operating_ie = IE_WLAN_EXTENSION, ext_ie = IE_EXTENSION_ID_ESP, operating_len = 4;
-	ESP_INFO EspInfo;
-	QLOAD_CTRL *pQloadCtrl = HcGetQloadCtrl(pAd);
 
 	EspInfo.word = 0;
 	EspInfo.field.ACI = 1;
@@ -997,7 +999,7 @@ INT Set_OceReducedWanEnable_Proc(
 	PRTMP_ADAPTER	pAd,
 	RTMP_STRING *arg)
 {
-	INT loop;
+	INT loop = 0;
 	P_OCE_CTRL pOceCtrl = &pAd->ApCfg.MBSSID[loop].wdev.OceCtrl;
 	BOOLEAN enable;
 
@@ -1011,7 +1013,7 @@ INT Set_OceEspEnable_Proc(
 	PRTMP_ADAPTER	pAd,
 	RTMP_STRING *arg)
 {
-	INT loop;
+	INT loop = 0;
 	P_OCE_CTRL pOceCtrl = &pAd->ApCfg.MBSSID[loop].wdev.OceCtrl;
 	BOOLEAN enable;
 

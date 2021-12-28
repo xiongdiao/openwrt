@@ -373,13 +373,19 @@ VOID RTMPSetHT(
 	switch (wlan_operate_get_rx_stream(wdev)) {
 	case 4:
 		ht_cap->MCSSet[3] =  0xff;
-
+		ht_cap->MCSSet[2] =  0xff;
+		ht_cap->MCSSet[1] =  0xff;
+		ht_cap->MCSSet[0] =  0xff;
+        break;
 	case 3:
 		ht_cap->MCSSet[2] =  0xff;
-
+		ht_cap->MCSSet[1] =  0xff;
+		ht_cap->MCSSet[0] =  0xff;
+        break;
 	case 2:
 		ht_cap->MCSSet[1] =  0xff;
-
+		ht_cap->MCSSet[0] =  0xff;
+        break;
 	case 1:
 	default:
 		ht_cap->MCSSet[0] =  0xff;
@@ -932,13 +938,19 @@ BOOLEAN RTMPCheckHt(
 	switch (wlan_operate_get_rx_stream(sta->wdev)) {
 	case 4:
 		pStaCfg->MlmeAux.HtCapability.MCSSet[3] = 0xff;
-
+		pStaCfg->MlmeAux.HtCapability.MCSSet[2] = 0xff;
+		pStaCfg->MlmeAux.HtCapability.MCSSet[1] = 0xff;
+		pStaCfg->MlmeAux.HtCapability.MCSSet[0] = 0xff;
+        break;
 	case 3:
 		pStaCfg->MlmeAux.HtCapability.MCSSet[2] = 0xff;
-
+		pStaCfg->MlmeAux.HtCapability.MCSSet[1] = 0xff;
+		pStaCfg->MlmeAux.HtCapability.MCSSet[0] = 0xff;
+        break;
 	case 2:
 		pStaCfg->MlmeAux.HtCapability.MCSSet[1] = 0xff;
-
+		pStaCfg->MlmeAux.HtCapability.MCSSet[0] = 0xff;
+        break;
 	case 1:
 	default:
 		pStaCfg->MlmeAux.HtCapability.MCSSet[0] = 0xff;

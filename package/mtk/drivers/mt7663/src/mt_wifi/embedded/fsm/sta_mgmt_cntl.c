@@ -117,6 +117,9 @@ static VOID join_iterate_by_cfg(RTMP_ADAPTER *pAd, struct wifi_dev *wdev)
 
 	USHORT ifIndex = wdev->func_idx;
 
+#ifdef DOT11W_PMF_SUPPORT
+    SCAN_CTRL *ScanCtrl = get_scan_ctrl_by_wdev(pAd, wdev);
+#endif /* DOT11W_PMF_SUPPORT */
 
 	ASSERT(pApCliEntry);
 	MTWF_LOG(DBG_CAT_CLIENT, CATCLIENT_APCLI, DBG_LVL_TRACE, ("(%s) Probe Req Timeout.\n", __func__));
@@ -142,10 +145,6 @@ static VOID join_iterate_by_cfg(RTMP_ADAPTER *pAd, struct wifi_dev *wdev)
 #ifdef CONFIG_OWE_SUPPORT
 	sta_reset_owe_parameters(pAd, ifIndex);
 #endif
-
-#ifdef DOT11W_PMF_SUPPORT
-		SCAN_CTRL *ScanCtrl = get_scan_ctrl_by_wdev(pAd, wdev);
-#endif /* DOT11W_PMF_SUPPORT */
 		/*
 			if exceed the APCLI_MAX_PROBE_RETRY_NUM (7),
 			switch to try next candidate AP.
@@ -1113,6 +1112,10 @@ static VOID sta_cntl_join_conf(
 #ifndef CONFIG_STA_ADHOC_SUPPORT
 	struct _SECURITY_CONFIG *pProfile_SecConfig;
 #endif
+#ifdef DOT11_SAE_SUPPORT
+	MAC_TABLE_ENTRY *pAPEntry = NULL;
+#endif
+
 	Elem = (MLME_QUEUE_ELEM *)elem_obj;
 	wdev = Elem->wdev;
 	pAd = (RTMP_ADAPTER *)wdev->sys_handle;
@@ -1121,8 +1124,9 @@ static VOID sta_cntl_join_conf(
 #ifndef CONFIG_STA_ADHOC_SUPPORT
 	pProfile_SecConfig = &wdev->SecConfig;
 #endif
+
 #ifdef DOT11_SAE_SUPPORT
-	MAC_TABLE_ENTRY *pAPEntry = GetAssociatedAPByWdev(pAd, wdev);
+	pAPEntry = GetAssociatedAPByWdev(pAd, wdev);
 #endif
 
 	if (Reason == MLME_SUCCESS) {
@@ -1180,7 +1184,7 @@ static VOID sta_cntl_join_conf(
 				UCHAR if_addr[MAC_ADDR_LEN];
 				UCHAR pmkid[80];
 				UCHAR pmk[LEN_PMK];
-				INT CachedIdx;
+				//INT CachedIdx;
 				UCHAR has_pmkid = FALSE;
 
 				 NdisZeroMemory(if_addr, MAC_ADDR_LEN);

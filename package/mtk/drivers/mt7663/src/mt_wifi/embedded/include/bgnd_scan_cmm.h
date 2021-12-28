@@ -15,7 +15,6 @@
 
     Abstract:
 
-
  */
 #ifndef __BGND_SCAN_CMM_H__
 #define __BGND_SCAN_CMM_H__

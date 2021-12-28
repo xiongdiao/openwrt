@@ -590,7 +590,7 @@ VOID BssTableDeleteEntry(BSS_TABLE *Tab, UCHAR *pBssid, UCHAR Channel)
 		}
 	}
 }
-
+#if 0
 #ifdef CONFIG_OWE_SUPPORT
 static VOID update_bss_by_owe_trans(struct _RTMP_ADAPTER *ad,
 				    UCHAR band_idx,
@@ -632,7 +632,7 @@ static VOID update_bss_by_owe_trans(struct _RTMP_ADAPTER *ad,
 	}
 }
 #endif
-
+#endif
 
 /*! \brief
  *	\param

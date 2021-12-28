@@ -3054,7 +3054,9 @@ Fail:
 						 && (pWscControl->RegData.PeerInfo.Version2 != 0))
 #endif /* WSC_V2_SUPPORT */
 				   )
+                {
 					RTMPMoveMemory(&pWscControl->WscProfile, &pWscControl->WscM7Profile, sizeof(pWscControl->WscM7Profile));
+                }
 
 					WscWriteConfToPortCfg(pAdapter, pWscControl, &pWscControl->WscProfile.Profile[0], TRUE);
 

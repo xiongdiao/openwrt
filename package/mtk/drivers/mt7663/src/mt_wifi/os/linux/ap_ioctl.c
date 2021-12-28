@@ -322,7 +322,7 @@ INT rt28xx_ap_ioctl(void *net_dev_obj, void *data_obj, int cmd) /* snowpin for a
 
 	case SIOCGIWPRIV:
 		if (wrqin->u.data.pointer) {
-			if (access_ok(VERIFY_WRITE, wrqin->u.data.pointer, sizeof(ap_privtab)) != TRUE)
+			if (access_ok(wrqin->u.data.pointer, sizeof(ap_privtab)) != TRUE)
 				break;
 
 			if ((ARRAY_SIZE(ap_privtab)) <= wrq->u.data.length) {
@@ -337,13 +337,13 @@ INT rt28xx_ap_ioctl(void *net_dev_obj, void *data_obj, int cmd) /* snowpin for a
 		break;
 
 	case RTPRIV_IOCTL_SET: {
-		if (access_ok(VERIFY_READ, wrqin->u.data.pointer, wrqin->u.data.length) == TRUE)
+		if (access_ok(wrqin->u.data.pointer, wrqin->u.data.length) == TRUE)
 			Status = RTMP_AP_IoctlHandle(pAd, wrq, CMD_RTPRIV_IOCTL_SET, 0, NULL, 0);
 	}
 	break;
 
 	case RTPRIV_IOCTL_SHOW: {
-		if (access_ok(VERIFY_READ, wrqin->u.data.pointer, wrqin->u.data.length) == TRUE)
+		if (access_ok(wrqin->u.data.pointer, wrqin->u.data.length) == TRUE)
 			Status = RTMP_AP_IoctlHandle(pAd, wrq, CMD_RTPRIV_IOCTL_SHOW, 0, NULL, 0);
 	}
 	break;

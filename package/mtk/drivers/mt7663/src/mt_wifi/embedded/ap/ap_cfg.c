@@ -3311,7 +3311,8 @@ INT RTMPAPSetInformation(
 					("I/F(apclii0) OID_APCLI_SSID::(Len=%d,Ssid=%s)\n",
 					apcli_entry->CfgSsidLen, apcli_entry->CfgSsid));
 				apcli_entry->ApcliInfStat.Enable = apcliEn;
-			} else
+			} 
+            else
 #endif
 				{
 					if (pObj->ioctl_if < HW_BEACON_MAX_NUM) {
@@ -3344,11 +3345,16 @@ INT RTMPAPSetInformation(
 								pObj->ioctl_if,	pMbss->SsidLen, pMbss->Ssid));
 						}
 					} else
+                    {
 						Status = -EINVAL;
-						break;
+                    }
+                    break;
 				}
-			} else
+			}
+            else
+            {
 				Status = -EINVAL;
+            }
 			break;
 
 	case OID_SET_PSK:

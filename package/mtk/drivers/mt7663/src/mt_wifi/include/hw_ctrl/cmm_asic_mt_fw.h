@@ -57,7 +57,7 @@ INT32 MtAsicUpdateStaRecBaByFw(
 /*
 	CONNAC F/W cmd PATH:
 */
-INT32 MtAsicUpdateStaRecAadOmByFw(
+VOID MtAsicUpdateStaRecAadOmByFw(
 	IN PRTMP_ADAPTER pAd,
 	IN UINT8 Wcid,
 	IN UINT8 AadOm);

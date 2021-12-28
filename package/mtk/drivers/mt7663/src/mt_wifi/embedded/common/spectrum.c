@@ -703,6 +703,11 @@ VOID InsertChannelRepIE(
 	struct wifi_dev *wdev;
 	BOOLEAN Same = FALSE;
 
+#ifdef OCE_SUPPORT
+	BSS_TABLE *ScanTab = NULL;
+	BSS_ENTRY *pBssEntry = NULL;
+#endif
+
 	if (RegulatoryClass == 0)
 		return;
 
@@ -711,8 +716,8 @@ VOID InsertChannelRepIE(
 #ifdef OCE_SUPPORT
 	wdev = &pAd->ApCfg.MBSSID[IfIdx].wdev;
 	NumberOfChannels = 0;
-	BSS_TABLE *ScanTab = get_scan_tab_by_wdev(pAd, wdev);
-	BSS_ENTRY *pBssEntry = &ScanTab->BssEntry[0];
+	ScanTab = get_scan_tab_by_wdev(pAd, wdev);
+	pBssEntry = &ScanTab->BssEntry[0];
 
 	if (IS_OCE_RNR_ENABLE(wdev)) {
 

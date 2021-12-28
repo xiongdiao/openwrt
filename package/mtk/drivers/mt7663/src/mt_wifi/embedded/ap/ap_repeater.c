@@ -592,7 +592,7 @@ UINT32 ReptTxPktCheckHandler(
 			return INSERT_REPT_ENTRY;
 		}
 
-/*#endif /* CONFIG_WIFI_PKT_FWD */
+/*#endif // CONFIG_WIFI_PKT_FWD */
 		*pWcid = pReptEntry->MacTabWCID;
 		return REPEATER_ENTRY_EXIST;
 	}

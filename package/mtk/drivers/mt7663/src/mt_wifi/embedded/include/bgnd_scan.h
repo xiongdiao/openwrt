@@ -17,7 +17,6 @@
 
 
  */
-
 #include "bgnd_scan_cmm.h"
 
 #ifndef __BGND_SCAN_H__

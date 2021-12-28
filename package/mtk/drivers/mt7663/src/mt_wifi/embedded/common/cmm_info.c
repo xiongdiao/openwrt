@@ -7765,26 +7765,38 @@ INT show_trinfo_proc(RTMP_ADAPTER *pAd, RTMP_STRING *arg)
 	NDIS_SPIN_LOCK *lock;
 #if defined(RTMP_PCI_SUPPORT) || defined(RTMP_RBUS_SUPPORT)
 	struct _RTMP_CHIP_CAP *cap = hc_get_chip_cap(pAd->hdev_ctrl);
+	PCI_HIF_T *hif = hc_get_hif_ctrl(pAd->hdev_ctrl);
 	UINT8 num_of_tx_ring = GET_NUM_OF_TX_RING(cap);
 	UINT8 num_of_rx_ring = GET_NUM_OF_RX_RING(cap);
-	PCI_HIF_T *hif = hc_get_hif_ctrl(pAd->hdev_ctrl);
+    UINT32 mbase[4] = {0}, mcnt[4] = {0}, mcidx[4] = {0}, mdidx[4] = {0};
+    UINT32 sys_ctrl[4];
+    UINT32 cr_int_src, cr_int_mask, cr_delay_int, cr_wpdma_glo_cfg;
+    INT idx;
+    INT TxHwRingNum = num_of_tx_ring;
+    INT RxHwRingNum = num_of_rx_ring;
+
+    UINT32 *tbase = NULL; 
+    UINT32 *tcidx = NULL;
+    UINT32 *rbase = NULL;
+    UINT32 *rcidx = NULL;
+    UINT32 *tcnt  = NULL; 
+    UINT32 *tdidx = NULL;
+    UINT32 *rcnt  = NULL;
+    UINT32 *rdidx = NULL;
+
+    tbase = (UINT32 *)kmalloc(sizeof(UINT32)*num_of_tx_ring, GFP_ATOMIC);
+    tcnt  = (UINT32 *)kmalloc(sizeof(UINT32)*num_of_tx_ring, GFP_ATOMIC);
+    tcidx = (UINT32 *)kmalloc(sizeof(UINT32)*num_of_tx_ring, GFP_ATOMIC);
+    tdidx = (UINT32 *)kmalloc(sizeof(UINT32)*num_of_tx_ring, GFP_ATOMIC);
+    rbase = (UINT32 *)kmalloc(sizeof(UINT32)*num_of_rx_ring, GFP_ATOMIC);
+    rcnt  = (UINT32 *)kmalloc(sizeof(UINT32)*num_of_rx_ring, GFP_ATOMIC);
+    rcidx = (UINT32 *)kmalloc(sizeof(UINT32)*num_of_rx_ring, GFP_ATOMIC);
+    rdidx = (UINT32 *)kmalloc(sizeof(UINT32)*num_of_rx_ring, GFP_ATOMIC);
 
 	if (IS_RBUS_INF(pAd) || IS_PCI_INF(pAd)) {
-		UINT32 tbase[num_of_tx_ring], tcnt[num_of_tx_ring];
-		UINT32 tcidx[num_of_tx_ring], tdidx[num_of_tx_ring];
-		UINT32 rbase[num_of_rx_ring], rcnt[num_of_rx_ring];
-		UINT32 rcidx[num_of_rx_ring], rdidx[num_of_rx_ring];
-		UINT32 mbase[4] = {0}, mcnt[4] = {0}, mcidx[4] = {0}, mdidx[4] = {0};
-		UINT32 sys_ctrl[4];
-		UINT32 cr_int_src, cr_int_mask, cr_delay_int, cr_wpdma_glo_cfg;
-		INT idx;
-		INT TxHwRingNum = num_of_tx_ring;
-		INT RxHwRingNum = num_of_rx_ring;
 #ifdef ERR_RECOVERY
-
 		if (IsStopingPdma(&pAd->ErrRecoveryCtl))
 			return TRUE;
-
 #endif /* ERR_RECOVERY */
 
 		for (idx = 0; idx < TxHwRingNum; idx++) {
@@ -8584,7 +8596,7 @@ INT Set_TxBfDynamicDisable_Proc(RTMP_ADAPTER *pAd, RTMP_STRING *arg)
 INT set_txbf_dynamic_mechanism_proc(RTMP_ADAPTER *pAd, RTMP_STRING *arg)
 {
 	BOOLEAN fgStatus = TRUE;
-	UINT32	bfdm_bit_map = 0;
+	//UINT32	bfdm_bit_map = 0;
 
 	if (strlen(arg) == 0) {
 		MTWF_LOG(DBG_CAT_ALL, DBG_SUBCAT_ALL, DBG_LVL_OFF,
@@ -9826,7 +9838,8 @@ INT Set_TxBfQdRead(RTMP_ADAPTER *pAd, RTMP_STRING *arg)
 INT Set_TxBfFbRptDbgInfo(RTMP_ADAPTER *pAd, RTMP_STRING *arg)
 {
 	INT8 *value = NULL;
-	UINT8 i, ucAction, ucPFMUWRSWTimout, Input[3] = {0};
+	//UINT8 i, ucAction, ucPFMUWRSWTimout, Input[3] = {0};
+	UINT8 i, Input[3] = {0};
 	EXT_CMD_TXBF_FBRPT_DBG_INFO_T ETxBfFbRptData;
 
 	for (i = 0, value = rstrtok(arg, ":"); value; value = rstrtok(NULL, ":"), i++) {

@@ -33,11 +33,7 @@ void RtmpAllocDescBuf(
 {
 	dma_addr_t DmaAddr = (dma_addr_t)(*phy_addr);
 	struct device *pdev = (struct device *)pDev;
-#if (KERNEL_VERSION(3, 18, 0) <= LINUX_VERSION_CODE)
-	*VirtualAddress = (PVOID)dma_zalloc_coherent(pdev, sizeof(char) * Length, &DmaAddr, GFP_KERNEL);
-#else
 	*VirtualAddress = (PVOID)dma_alloc_coherent(pdev, sizeof(char) * Length, &DmaAddr, GFP_KERNEL);
-#endif
 	*phy_addr = (NDIS_PHYSICAL_ADDRESS)DmaAddr;
 }
 

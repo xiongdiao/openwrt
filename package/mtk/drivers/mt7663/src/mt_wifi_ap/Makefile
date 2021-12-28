@@ -1,3 +1,5 @@
+$(warning "================================= mt_wifi_ap Makefile start ========================================")
+
 ifeq ($(CONFIG_SUPPORT_OPENWRT),y)
 WIFI_DRV_PATH := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))/..
 else
@@ -15,7 +17,7 @@ EXTRA_CFLAGS = -I$(WIFI_DRV_PATH)/mt_wifi/include \
 
 ifeq ($(CONFIG_SUPPORT_OPENWRT),y)
 ifeq ($(CONFIG_CHIP_MT7663E),y)
-DRV_NAME = mt7663e
+DRV_NAME = mt7663
 else
 DRV_NAME = mt_wifi
 endif
@@ -1686,3 +1688,7 @@ endif
 MODULE_FLAGS=$(EXTRA_CFLAGS)
 export MODULE_FLAGS
 obj-m+=$(SRC_EMBEDDED_DIR)/plug_in/
+$(warning "================================= mt_wifi_ap obj-m = $(obj-m) ========================================")
+$(warning "================================= mt_wifi_ap DRV_NAME=$(DRV_NAME) ========================================")
+$(warning "================================= mt_wifi_ap CONFIG_SUPPORT_OPENWRT=$(CONFIG_SUPPORT_OPENWRT) ========================================")
+$(warning "================================= mt_wifi_ap CONFIG_CHIP_MT7663E=$(CONFIG_CHIP_MT7663E) ========================================")

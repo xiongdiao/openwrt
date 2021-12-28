@@ -816,11 +816,12 @@ static BOOLEAN PeerAssocReqCmmSanity(
 			}
 #endif /* MBO_SUPPORT */
 #ifdef CONFIG_MAP_SUPPORT
+            123
 			if (map_check_cap_ie(eid_ptr, &map_cap) == TRUE)
 				ie_lists->MAP_AttriValue = map_cap;
 #endif /* CONFIG_MAP_SUPPORT */
 #ifdef WH_EVENT_NOTIFIER
-
+            456
 			if (pAd->ApCfg.EventNotifyCfg.CustomOUILen &&
 				(eid_ptr->Len >= pAd->ApCfg.EventNotifyCfg.CustomOUILen) &&
 				NdisEqualMemory(eid_ptr->Octet, pAd->ApCfg.EventNotifyCfg.CustomOUI, pAd->ApCfg.EventNotifyCfg.CustomOUILen)) {
@@ -841,6 +842,7 @@ static BOOLEAN PeerAssocReqCmmSanity(
 			}
 			MTWF_LOG(DBG_CAT_AP, DBG_SUBCAT_ALL, DBG_LVL_TRACE, ("[%d] has_oui: %d\n", pEntry->wcid, pEntry->has_oui));
 #endif /* TXBF_SUPPORT */
+            break;
 		case IE_WPA2:
 #ifdef DOT11R_FT_SUPPORT
 #endif /* DOT11R_FT_SUPPORT */
@@ -1807,7 +1809,8 @@ SendAssocResponse:
 
 	if (pEntry->QosMapSupport) {
 		ULONG	TmpLen;
-		UCHAR	QosMapIE, ielen = 0, i = 0, explen = 0;
+		//UCHAR	QosMapIE, ielen = 0, i = 0, explen = 0;
+		UCHAR	QosMapIE, ielen = 0, explen = 0;
 		PHOTSPOT_CTRL pHSCtrl =  &pAd->ApCfg.MBSSID[pEntry->apidx].HotSpotCtrl;
 
 		if (pHSCtrl->QosMapEnable && pHSCtrl->HotSpotEnable) {

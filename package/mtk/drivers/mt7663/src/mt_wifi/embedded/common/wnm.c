@@ -286,7 +286,7 @@ BOOLEAN IsGratuitousARP(IN RTMP_ADAPTER * pAd,
 	PWNM_CTRL pWNMCtrl = &pMbss->WNMCtrl;
 	PROXY_ARP_IPV4_ENTRY *ProxyARPEntry;
 	BOOLEAN IsDrop = FALSE;
-	INT32 Ret;
+	//INT32 Ret;
 #endif
 	NdisMoveMemory(&ProtoType, pData, 2);
 	ProtoType = OS_NTOHS(ProtoType);
@@ -832,7 +832,7 @@ UINT32 IPv4ProxyARPTableLen(IN PRTMP_ADAPTER pAd,
 	PWNM_CTRL pWNMCtrl = &pMbss->WNMCtrl;
 	PROXY_ARP_IPV4_ENTRY *ProxyARPEntry;
 	UINT32 TableLen = 0;
-	INT32 Ret;
+	//INT32 Ret;
 	MTWF_LOG(DBG_CAT_PROTO, CATPROTO_WNM, DBG_LVL_OFF, ("%s\n", __func__));
 	RTMP_SEM_LOCK(&pWNMCtrl->ProxyARPListLock);
 	DlListForEach(ProxyARPEntry, &pWNMCtrl->IPv4ProxyARPList, PROXY_ARP_IPV4_ENTRY, List) {
@@ -848,7 +848,7 @@ UINT32 IPv6ProxyARPTableLen(IN PRTMP_ADAPTER pAd,
 	PWNM_CTRL pWNMCtrl = &pMbss->WNMCtrl;
 	PROXY_ARP_IPV6_ENTRY *ProxyARPEntry;
 	UINT32 TableLen = 0;
-	INT32 Ret;
+	//INT32 Ret;
 	RTMP_SEM_LOCK(&pWNMCtrl->ProxyARPIPv6ListLock);
 	DlListForEach(ProxyARPEntry, &pWNMCtrl->IPv6ProxyARPList, PROXY_ARP_IPV6_ENTRY, List) {
 		TableLen += sizeof(PROXY_ARP_IPV6_UNIT);
@@ -864,7 +864,7 @@ BOOLEAN GetIPv4ProxyARPTable(IN PRTMP_ADAPTER pAd,
 	PWNM_CTRL pWNMCtrl = &pMbss->WNMCtrl;
 	PROXY_ARP_IPV4_ENTRY *ProxyARPEntry;
 	PROXY_ARP_IPV4_UNIT *ProxyARPUnit = (PROXY_ARP_IPV4_UNIT *)(*ProxyARPTable);
-	INT32 Ret;
+	//INT32 Ret;
 	MTWF_LOG(DBG_CAT_PROTO, CATPROTO_WNM, DBG_LVL_OFF, ("%s\n", __func__));
 	RTMP_SEM_LOCK(&pWNMCtrl->ProxyARPListLock);
 	DlListForEach(ProxyARPEntry, &pWNMCtrl->IPv4ProxyARPList, PROXY_ARP_IPV4_ENTRY, List) {
@@ -883,7 +883,7 @@ BOOLEAN GetIPv6ProxyARPTable(IN PRTMP_ADAPTER pAd,
 	PWNM_CTRL pWNMCtrl = &pMbss->WNMCtrl;
 	PROXY_ARP_IPV6_ENTRY *ProxyARPEntry;
 	PROXY_ARP_IPV6_UNIT *ProxyARPUnit = (PROXY_ARP_IPV6_UNIT *)(*ProxyARPTable);
-	INT32 Ret;
+	//INT32 Ret;
 	MTWF_LOG(DBG_CAT_PROTO, CATPROTO_WNM, DBG_LVL_OFF, ("%s\n", __func__));
 	RTMP_SEM_LOCK(&pWNMCtrl->ProxyARPIPv6ListLock);
 	DlListForEach(ProxyARPEntry, &pWNMCtrl->IPv6ProxyARPList, PROXY_ARP_IPV6_ENTRY, List) {
@@ -905,7 +905,7 @@ UINT32 AddIPv4ProxyARPEntry(IN PRTMP_ADAPTER pAd,
 	int i = 0, find_list = 0;
 	PWNM_CTRL pWNMCtrl = &pMbss->WNMCtrl;
 	PROXY_ARP_IPV4_ENTRY *ProxyARPEntry;
-	INT32 Ret;
+	//INT32 Ret;
 	MTWF_LOG(DBG_CAT_PROTO, CATPROTO_WNM, DBG_LVL_OFF, ("%s\n", __func__));
 
 	if ((pTargetIPAddr[0] == 0) && (pTargetIPAddr[1] == 0)) {
@@ -958,7 +958,7 @@ VOID RemoveIPv4ProxyARPEntry(IN PRTMP_ADAPTER pAd,
 {
 	PWNM_CTRL pWNMCtrl = &pMbss->WNMCtrl;
 	PROXY_ARP_IPV4_ENTRY *ProxyARPEntry, *ProxyARPEntryTmp;
-	INT32 Ret;
+	//INT32 Ret;
 	MTWF_LOG(DBG_CAT_PROTO, CATPROTO_WNM, DBG_LVL_OFF, ("%s\n", __func__));
 	if (!is_atomic)
 		RTMP_SEM_LOCK(&pWNMCtrl->ProxyARPListLock);
@@ -986,7 +986,7 @@ UINT32 AddIPv6ProxyARPEntry(IN PRTMP_ADAPTER pAd,
 {
 	PWNM_CTRL pWNMCtrl = &pMbss->WNMCtrl;
 	PROXY_ARP_IPV6_ENTRY *ProxyARPEntry;
-	INT32 Ret;
+	//INT32 Ret;
 	UINT8 i;
 	BOOLEAN IsDAD = FALSE;
 	PNET_DEV NetDev = pMbss->wdev.if_dev;
@@ -1064,7 +1064,7 @@ VOID RemoveIPv6ProxyARPEntry(IN PRTMP_ADAPTER pAd,
 {
 	PWNM_CTRL pWNMCtrl = &pMbss->WNMCtrl;
 	PROXY_ARP_IPV6_ENTRY *ProxyARPEntry, *ProxyARPEntryTmp;
-	INT32 Ret;
+	//INT32 Ret;
 	MTWF_LOG(DBG_CAT_PROTO, CATPROTO_WNM, DBG_LVL_OFF, ("%s\n", __func__));
 	RTMP_SEM_LOCK(&pWNMCtrl->ProxyARPIPv6ListLock);
 	DlListForEachSafe(ProxyARPEntry, ProxyARPEntryTmp, &pWNMCtrl->IPv6ProxyARPList, PROXY_ARP_IPV6_ENTRY, List) {
@@ -1093,7 +1093,7 @@ BOOLEAN IPv4ProxyARP(IN PRTMP_ADAPTER pAd,
 	PUCHAR SourceMACAddr = pData + 10;
 	PUCHAR SourceIPAddr = pData + 16;
 	PUCHAR TargetIPAddr = pData + 26;
-	INT32 Ret;
+	//INT32 Ret;
 	BOOLEAN IsDAD = FALSE;
 	PUCHAR TargetMACAddr = pData + 20;
 	UCHAR ALL_ZERO_BROADCAST_ADDR[MAC_ADDR_LEN] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
@@ -1210,7 +1210,7 @@ BOOLEAN IPv6ProxyARP(IN PRTMP_ADAPTER pAd,
 	PUCHAR SourceMACAddr = pData + 68;
 	PUCHAR SourceIPAddr = pData + 10;
 	PUCHAR TargetIPAddr = pData + 50;
-	INT32 Ret;
+	//INT32 Ret;
 	BOOLEAN IsDAD = FALSE;
 	/* MTWF_LOG(DBG_CAT_PROTO, CATPROTO_WNM, DBG_LVL_OFF, ("%s\n", __func__)); */
 	if (!is_atomic)
@@ -1330,7 +1330,7 @@ VOID WNMIPv6ProxyARPCheck(
 				/* Prefix information */
 				if (*Pos == 0x03) {
 					UCHAR *Prefix;
-					INT32 Ret;
+					//INT32 Ret;
 					PROXY_ARP_IPV6_ENTRY *ProxyARPEntry;
 					PWNM_CTRL pWNMCtrl = &pMbss->WNMCtrl;
 					/* Prefix */
@@ -2362,7 +2362,7 @@ VOID Clear_All_PROXY_TABLE(IN PRTMP_ADAPTER pAd)
 	POS_COOKIE pObj = (POS_COOKIE)pAd->OS_Cookie;
 	UCHAR APIndex = pObj->ioctl_if;
 	PWNM_CTRL pWNMCtrl;
-	UINT32 Ret;
+	//UINT32 Ret;
 	PROXY_ARP_IPV4_ENTRY *ProxyARPIPv4Entry, *ProxyARPIPv4EntryTmp;
 	PROXY_ARP_IPV6_ENTRY *ProxyARPIPv6Entry, *ProxyARPIPv6EntryTmp;
 	pWNMCtrl = &pAd->ApCfg.MBSSID[APIndex].WNMCtrl;

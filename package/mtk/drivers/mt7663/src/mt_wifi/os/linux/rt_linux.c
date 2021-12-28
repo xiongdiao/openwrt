@@ -214,9 +214,14 @@ static inline VOID __RTMP_OS_Init_Timer(
 	IN PVOID data)
 {
 	if (!timer_pending(pTimer)) {
+#if LINUX_VERSION_CODE < KERNEL_VERSION(4,14,0)
 		init_timer(pTimer);
 		pTimer->data = (unsigned long)data;
 		pTimer->function = function;
+#else
+        timer_setup(pTimer, function, 0);
+
+#endif
 	}
 }
 
@@ -819,7 +824,7 @@ int RtmpOSFileRead(RTMP_OS_FD osfd, char *pDataPtr, int readLen)
 #else
 
 	if (osfd->f_mode & FMODE_CAN_READ) {
-		return __vfs_read(osfd, pDataPtr, readLen, &osfd->f_pos);
+		return kernel_read(osfd, pDataPtr, readLen, &osfd->f_pos);
 #endif
 	} else {
 		MTWF_LOG(DBG_CAT_INIT, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("no file read method\n"));
@@ -833,7 +838,7 @@ int RtmpOSFileWrite(RTMP_OS_FD osfd, char *pDataPtr, int writeLen)
 #if (KERNEL_VERSION(4, 1, 0) > LINUX_VERSION_CODE)
 	return osfd->f_op->write(osfd, pDataPtr, (size_t) writeLen, &osfd->f_pos);
 #else
-	return __vfs_write(osfd, pDataPtr, (size_t) writeLen, &osfd->f_pos);
+	return kernel_write(osfd, pDataPtr, (size_t) writeLen, &osfd->f_pos);
 #endif
 }
 
@@ -1959,7 +1964,7 @@ VOID RtmpDrvAllMacPrint(
 				MTWF_LOG(DBG_CAT_INIT, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("no file write method\n"));
 			}
 #else
-			__vfs_write(file_w, msg, strlen(msg), &file_w->f_pos);
+			kernel_write(file_w, msg, strlen(msg), &file_w->f_pos);
 #endif
 				MTWF_LOG(DBG_CAT_INIT, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("%s", msg));
 				macAddr += AddrStep;
@@ -2019,7 +2024,7 @@ VOID RtmpDrvAllE2PPrint(
 					MTWF_LOG(DBG_CAT_INIT, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("no file write method\n"));
 				}
 #else
-				__vfs_write(file_w, msg, strlen(msg), &file_w->f_pos);
+				kernel_write(file_w, msg, strlen(msg), &file_w->f_pos);
 #endif
 				MTWF_LOG(DBG_CAT_INIT, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("%s", msg));
 				eepAddr += AddrStep;
@@ -2067,7 +2072,7 @@ VOID RtmpDrvAllRFPrint(
 				MTWF_LOG(DBG_CAT_INIT, DBG_SUBCAT_ALL, DBG_LVL_ERROR, ("no file write method\n"));
 			}
 #else
-			__vfs_write(file_w, pBuf, BufLen, &file_w->f_pos);
+			kernel_write(file_w, pBuf, BufLen, &file_w->f_pos);
 #endif
 		}
 

@@ -321,7 +321,7 @@ static VOID WextMboSendNeighborReportToDaemonEvent(
 	NdisZeroMemory(buf, buflen);
 
 
-	neighbor_list_data = (struct reduced_neighbor_list_data *)buf;
+	neighbor_list_data = (struct neighbor_list_data *)buf;
 	neighbor_list_data->ifindex = RtmpOsGetNetIfIndex(net_dev);
 	neighbor_list_data->neighbor_list_len	= report_buf_len;
 	memcpy(neighbor_list_data->neighbor_list_req, NeighborRepList, report_buf_len);
@@ -543,6 +543,7 @@ INT MboIndicateNeighborReportToDaemon(
 	DAEMON_NEIGHBOR_REP_INFO *pNeighborEntry = NULL;
 	UINT8 TotalReportNum = 0;
 	BSS_TABLE *ScanTab = get_scan_tab_by_wdev(pAd, pWdev);
+    BSS_ENTRY *pBssEntry = 0;
 
 	if (ScanTab == NULL)
 		return FALSE;
@@ -569,8 +570,8 @@ INT MboIndicateNeighborReportToDaemon(
 			if ((pAd->ApCfg.BssidNum + loop) >= ReportNum)
 				break;
 
-			BSS_ENTRY *pBssEntry = &ScanTab->BssEntry[loop];
-			DAEMON_NEIGHBOR_REP_INFO *pNeighborEntry = &NeighborRepList.EvtNRInfo[NeighborRepList.CurrNum];
+			pBssEntry = &ScanTab->BssEntry[loop];
+			pNeighborEntry = &NeighborRepList.EvtNRInfo[NeighborRepList.CurrNum];
 
 			NeighborRepList.CurrNum++;
 

@@ -368,7 +368,8 @@ INT32 mt_AsicBfStaRecUpdate(
 	UCHAR   ucStatus   = TRUE;
 	UCHAR   ucPeerRxNumSupport;
 	UCHAR   ucTxMCSSetdefined, ucTxRxMCSSetNotEqual, ucTxMaxNumSpatilStream;
-	BOOLEAN fgETxBfCap = FALSE, fgITxBfCap = FALSE;;
+	BOOLEAN fgETxBfCap = FALSE;
+    BOOLEAN fgITxBfCap = FALSE;
 	UINT8   ucTxPath = pAd->Antenna.field.TxPath;
 	HT_CAPABILITY_IE *ht_cap;
 	VHT_CAP_INFO vht_cap;

@@ -3027,7 +3027,7 @@ INT rt28xx_sta_ioctl(void *net_dev_obj, void *rq, INT cmd) /* snowpin for ap/sta
 
 	case SIOCGIWPRIV:
 		if (wrqin->u.data.pointer) {
-			if (access_ok(VERIFY_WRITE, wrqin->u.data.pointer, sizeof(privtab)) != TRUE)
+			if (access_ok(wrqin->u.data.pointer, sizeof(privtab)) != TRUE)
 				break;
 
 			if ((ARRAY_SIZE(privtab)) <= wrq->u.data.length) {
@@ -3042,13 +3042,13 @@ INT rt28xx_sta_ioctl(void *net_dev_obj, void *rq, INT cmd) /* snowpin for ap/sta
 		break;
 
 	case RTPRIV_IOCTL_SET:
-		if (access_ok(VERIFY_READ, wrqin->u.data.pointer, wrqin->u.data.length) != TRUE)
+		if (access_ok(wrqin->u.data.pointer, wrqin->u.data.length) != TRUE)
 			break;
 
 		return rt_ioctl_setparam(net_dev, NULL, NULL, wrqin->u.data.pointer);
 
 	case RTPRIV_IOCTL_STA_SHOW: /* snowpin for ap/sta */
-		if (access_ok(VERIFY_READ, wrqin->u.data.pointer, wrqin->u.data.length) != TRUE)
+		if (access_ok(wrqin->u.data.pointer, wrqin->u.data.length) != TRUE)
 			break;
 
 		return rt_ioctl_showparam(net_dev, NULL, NULL, wrqin->u.data.pointer);

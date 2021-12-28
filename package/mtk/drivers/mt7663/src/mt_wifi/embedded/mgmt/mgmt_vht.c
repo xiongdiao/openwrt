@@ -798,10 +798,19 @@ INT build_vht_oper_ie(RTMP_ADAPTER *pAd, UCHAR bw, UCHAR Channel, struct wifi_de
 	switch  (wlan_operate_get_rx_stream(wdev)) {
 	case 4:
 		vht_op.basic_mcs_set.mcs_ss4 = max_vht_mcs;
+		vht_op.basic_mcs_set.mcs_ss3 = max_vht_mcs;
+		vht_op.basic_mcs_set.mcs_ss2 = max_vht_mcs;
+		vht_op.basic_mcs_set.mcs_ss1 = max_vht_mcs;
+		break;
 	case 3:
 		vht_op.basic_mcs_set.mcs_ss3 = max_vht_mcs;
+		vht_op.basic_mcs_set.mcs_ss2 = max_vht_mcs;
+		vht_op.basic_mcs_set.mcs_ss1 = max_vht_mcs;
+		break;
 	case 2:
 		vht_op.basic_mcs_set.mcs_ss2 = max_vht_mcs;
+		vht_op.basic_mcs_set.mcs_ss1 = max_vht_mcs;
+		break;
 	case 1:
 		vht_op.basic_mcs_set.mcs_ss1 = max_vht_mcs;
 		break;

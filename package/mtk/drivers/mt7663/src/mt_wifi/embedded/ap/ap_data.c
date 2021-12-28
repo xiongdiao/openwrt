@@ -1023,7 +1023,7 @@ INT ap_mlme_mgmtq_tx(RTMP_ADAPTER *pAd, struct wifi_dev *wdev, TX_BLK *tx_blk)
 	UINT8 tx_hw_hdr_len = cap->tx_hw_hdr_len;
 	PHEADER_802_11 pHeader_802_11;
 	MAC_TABLE_ENTRY *pMacEntry = tx_blk->pMacEntry;
-	struct dev_rate_info *rate;
+	//struct dev_rate_info *rate;
 	BOOLEAN bAckRequired, bInsertTimestamp;
 	UCHAR PID, wcid = tx_blk->Wcid, tx_rate;
 	UCHAR prot = 0;
@@ -1322,7 +1322,7 @@ INT ap_mlme_mgmtq_tx(RTMP_ADAPTER *pAd, struct wifi_dev *wdev, TX_BLK *tx_blk)
 					correct with OFDM mode
 				*/
 				transmit->field.MODE = MODE_OFDM;
-				MTWF_LOG(DBG_CAT_HIF, CATHIF_PCI, DBG_LVL_ERROR, ("@@@@ FIXME!! %s(): frame(Type=%x, SubType=%x) use the CCK RATE but wdev support A band only, mac_info.Length=%d, mac_info.wmm_set=%d, mac_info.q_idx=%d, mac_info.OmacIdx=%d\n",
+				MTWF_LOG(DBG_CAT_HIF, CATHIF_PCI, DBG_LVL_ERROR, ("@@@@ FIXME!! %s(): frame(Type=%x, SubType=%x) use the CCK RATE but wdev support A band only, mac_info.Length=%ld, mac_info.wmm_set=%d, mac_info.q_idx=%d, mac_info.OmacIdx=%d\n",
 						 __func__, pHeader_802_11->FC.Type, pHeader_802_11->FC.SubType, mac_info.Length, mac_info.wmm_set, mac_info.q_idx, mac_info.OmacIdx));
 			}
 		}
@@ -1609,7 +1609,7 @@ INT ap_mlme_dataq_tx(RTMP_ADAPTER *pAd, struct wifi_dev *wdev, TX_BLK *tx_blk)
 					correct with OFDM mode
 				*/
 				transmit->field.MODE = MODE_OFDM;
-				MTWF_LOG(DBG_CAT_HIF, CATHIF_PCI, DBG_LVL_ERROR, ("@@@@ FIXME!! %s(): frame(Type=%d, SubType=%d) use the CCK RATE but wdev support A band only, mac_info.Length=%d, mac_info.wmm_set=%d, mac_info.q_idx=%d, mac_info.OmacIdx=%d\n",
+				MTWF_LOG(DBG_CAT_HIF, CATHIF_PCI, DBG_LVL_ERROR, ("@@@@ FIXME!! %s(): frame(Type=%d, SubType=%d) use the CCK RATE but wdev support A band only, mac_info.Length=%ld, mac_info.wmm_set=%d, mac_info.q_idx=%d, mac_info.OmacIdx=%d\n",
 						 __func__, pHeader_802_11->FC.Type, pHeader_802_11->FC.SubType, mac_info.Length, mac_info.wmm_set, mac_info.q_idx, mac_info.OmacIdx));
 			}
 		}

@@ -389,7 +389,7 @@ VOID ApUpdateCapabilityAndErpIe(RTMP_ADAPTER *pAd, struct _BSS_STRUCT *mbss)
 	MAC_TABLE_ENTRY *pEntry = NULL;
 	USHORT *pCapInfo = NULL;
 	struct wifi_dev *wdev = &mbss->wdev;
-	ADD_HT_INFO_IE *addht = wlan_operate_get_addht(wdev);
+	//ADD_HT_INFO_IE *addht = wlan_operate_get_addht(wdev);
 	UCHAR Channel = wdev->channel;
 	UCHAR PhyMode = wdev->PhyMode;
 
@@ -2044,8 +2044,8 @@ VOID MacTableMaintenance(RTMP_ADAPTER *pAd)
 			if (pEntry->wdev) {
 				UINT32 tx_tp = (pEntry->AvgTxBytes >> BYTES_PER_SEC_TO_MBPS);
 				UINT32 rx_tp = (pEntry->AvgRxBytes >> BYTES_PER_SEC_TO_MBPS);
-				ULONG avg_tx_b = pEntry->AvgTxBytes;
-				ULONG avg_rx_b = pEntry->AvgRxBytes;
+				//ULONG avg_tx_b = pEntry->AvgTxBytes;
+				//ULONG avg_rx_b = pEntry->AvgRxBytes;
 				UINT8 traffc_mode = 0;
 
 				/* get associated band with wdev*/
@@ -2081,9 +2081,10 @@ VOID MacTableMaintenance(RTMP_ADAPTER *pAd)
 				BOOLEAN ApclibQosNull = FALSE;
 
 				if (CLIENT_STATUS_TEST_FLAG(pEntry, fCLIENT_STATUS_WMM_CAPABLE))
+                {
 					ApclibQosNull = TRUE;
-
-					ApCliRTMPSendNullFrame(pAd, pEntry->CurrTxRate, ApclibQosNull, pEntry, PWR_ACTIVE);
+                }
+                ApCliRTMPSendNullFrame(pAd, pEntry->CurrTxRate, ApclibQosNull, pEntry, PWR_ACTIVE);
 				continue;
 			}
 		}
@@ -3912,12 +3913,13 @@ BOOLEAN DOT1X_EapTriggerAction(RTMP_ADAPTER *pAd, MAC_TABLE_ENTRY *pEntry)
 	INT				apidx = MAIN_MBSSID;
 	UCHAR			eapol_start_1x_hdr[4] = {0x01, 0x01, 0x00, 0x00};
 	UINT8			frame_len = LENGTH_802_3 + sizeof(eapol_start_1x_hdr);
-	UCHAR			FrameBuf[frame_len + 32];
+	//UCHAR			FrameBuf[frame_len + 32];
+	UCHAR			*FrameBuf;
 	UINT8			offset = 0;
 	USHORT			bss_Vlan_Priority = 0;
 	USHORT			bss_Vlan;
 	USHORT			TCI;
-
+    FrameBuf = (UCHAR *)kmalloc(sizeof(UCHAR)*(frame_len + 32), GFP_ATOMIC);
 	if (IS_AKM_1X_Entry(pEntry) || IS_IEEE8021X_Entry(&pAd->ApCfg.MBSSID[apidx].wdev)) {
 		/* Init the frame buffer */
 		NdisZeroMemory(FrameBuf, frame_len);
@@ -3971,11 +3973,15 @@ BOOLEAN DOT1X_EapTriggerAction(RTMP_ADAPTER *pAd, MAC_TABLE_ENTRY *pEntry)
 
 		/* Report to upper layer */
 		if (RTMP_L2_FRAME_TX_ACTION(pAd, apidx, FrameBuf, frame_len) == FALSE)
+        {
+            kfree(FrameBuf);
 			return FALSE;
+        }
 
 		MTWF_LOG(DBG_CAT_AP, DBG_SUBCAT_ALL, DBG_LVL_TRACE,
 				 ("Notify 8021.x daemon to trigger EAP-SM for this sta(%02x:%02x:%02x:%02x:%02x:%02x)\n", PRINT_MAC(pEntry->Addr)));
 	}
+    kfree(FrameBuf);
 
 	return TRUE;
 }

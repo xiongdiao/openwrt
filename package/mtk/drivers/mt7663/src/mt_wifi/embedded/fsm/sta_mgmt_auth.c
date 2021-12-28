@@ -331,7 +331,7 @@ VOID sta_peer_deauth_action(
 	UCHAR Addr2[MAC_ADDR_LEN];
 	UCHAR Addr3[MAC_ADDR_LEN];
 	USHORT Reason;
-	BOOLEAN bDoIterate = FALSE;
+	//BOOLEAN bDoIterate = FALSE;
 	PSTA_ADMIN_CONFIG pStaCfg = GetStaCfgByWdev(pAd, Elem->wdev);
 	struct wifi_dev *wdev = Elem->wdev;
 	USHORT ifIndex = wdev->func_idx;

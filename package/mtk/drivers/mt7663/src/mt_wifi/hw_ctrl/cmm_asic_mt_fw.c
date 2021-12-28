@@ -129,12 +129,13 @@ VOID MtAsicSetWcidAAD_OMByFw(
 /*
 	CONNAC F/W CMD PATH:
 */
-INT32 MtAsicUpdateStaRecAadOmByFw(
+VOID MtAsicUpdateStaRecAadOmByFw(
 	IN PRTMP_ADAPTER pAd,
 	IN UINT8 Wcid,
 	IN UINT8 AadOm)
 {
-	return CmdExtStaRecAADOmUpdate(pAd, Wcid, AadOm);
+	CmdExtStaRecAADOmUpdate(pAd, Wcid, AadOm);
+	return;
 }
 
 #endif /* HTC_DECRYPT_IOT */

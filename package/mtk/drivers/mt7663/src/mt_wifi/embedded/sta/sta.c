@@ -313,9 +313,12 @@ VOID MSTA_Init(RTMP_ADAPTER *pAd, RTMP_OS_NETDEV_OP_HOOK *pNetDevOps)
 		pDevNew = RtmpOSNetDevCreate(pAd, MC_RowID, &IoctlIF, inf_type, idx,
 									   sizeof(struct mt_dev_priv), dev_name, TRUE);
 #endif /*MULTI_PROFILE*/
-	}	else
+	}
+    else
 #endif /*CONFIG_APSTA_MIXED_SUPPORT*/
+    {
 		pDevNew = RtmpOSNetDevCreate(pAd, MC_RowID, &IoctlIF, inf_type, idx, sizeof(struct mt_dev_priv), dev_name, TRUE);
+    }
 
 		if (pDevNew == NULL)
 			break;
@@ -519,8 +522,11 @@ INT sta_inf_open(struct wifi_dev *wdev)
 {
 	struct _RTMP_ADAPTER *pAd = (struct _RTMP_ADAPTER *)wdev->sys_handle;
 	PSTA_ADMIN_CONFIG pStaCfg = NULL;
+#ifdef APCLI_CONNECTION_TRIAL
 	UINT mbss_idx;
 	UINT sync_to_band;
+#endif
+
 #ifdef CONFIG_APSTA_MIXED_SUPPORT
 	if ((IF_COMBO_HAVE_AP_STA(pAd))) {
 		if (wdev->func_idx >= MAX_APCLI_NUM)

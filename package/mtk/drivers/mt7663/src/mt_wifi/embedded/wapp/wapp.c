@@ -194,10 +194,19 @@ INT wapp_send_wdev_vht_cap_rsp(
 				switch	(wlan_operate_get_rx_stream(wdev)) {
 				case 4:
 					drv_vht_op.basic_mcs_set.mcs_ss4 = cap->mcs_nss.max_vht_mcs;
+					drv_vht_op.basic_mcs_set.mcs_ss3 = cap->mcs_nss.max_vht_mcs;
+					drv_vht_op.basic_mcs_set.mcs_ss2 = cap->mcs_nss.max_vht_mcs;
+					drv_vht_op.basic_mcs_set.mcs_ss1 = cap->mcs_nss.max_vht_mcs;
+					break;
 				case 3:
 					drv_vht_op.basic_mcs_set.mcs_ss3 = cap->mcs_nss.max_vht_mcs;
+					drv_vht_op.basic_mcs_set.mcs_ss2 = cap->mcs_nss.max_vht_mcs;
+					drv_vht_op.basic_mcs_set.mcs_ss1 = cap->mcs_nss.max_vht_mcs;
+					break;
 				case 2:
 					drv_vht_op.basic_mcs_set.mcs_ss2 = cap->mcs_nss.max_vht_mcs;
+					drv_vht_op.basic_mcs_set.mcs_ss1 = cap->mcs_nss.max_vht_mcs;
+					break;
 				case 1:
 					drv_vht_op.basic_mcs_set.mcs_ss1 = cap->mcs_nss.max_vht_mcs;
 					break;
@@ -1386,7 +1395,7 @@ VOID RTMPIoctlGetScanResults(
 	INT last_bss_cnt = 0;
 	RTMP_STRING *msg;
 	INT		i = 0;
-	INT			WaitCnt = 0;
+	//INT			WaitCnt = 0;
 	UINT32		bss_start_idx;
 	BSS_ENTRY *bss;
 	struct scan_bss_info *pBss;
@@ -1395,6 +1404,9 @@ VOID RTMPIoctlGetScanResults(
 	UINT16	l;
 	BSS_TABLE *ScanTab = NULL;
 	struct wifi_dev *wdev = NULL;
+	INT custom_event_length = 0;
+	UINT32 TotalLen = 0;
+	INT count = 0, max_bss;
 
 	for (l = 0; l < WDEV_NUM_MAX; l++) {
 		if (pAdapter->wdev_list[l] != NULL) {
@@ -1405,15 +1417,15 @@ VOID RTMPIoctlGetScanResults(
 	}
 
 	if (wdev == NULL)
-		return 0;
+		return;
 
 	ScanTab = get_scan_tab_by_wdev(pAdapter, wdev);
 #ifndef IWEVCUSTOM_PAYLOD_MAX_LEN
 #define IWEVCUSTOM_PAYLOD_MAX_LEN 220
 #endif
-	INT custom_event_length = IWEVCUSTOM_PAYLOD_MAX_LEN;
-	UINT32 TotalLen = custom_event_length;
-	INT count = 0, max_bss;
+	custom_event_length = IWEVCUSTOM_PAYLOD_MAX_LEN;
+	TotalLen = custom_event_length;
+	//INT count = 0, max_bss;
 
 
 	MTWF_LOG(DBG_CAT_CFG, DBG_SUBCAT_ALL, DBG_LVL_INFO, ("RTMPIoctlGetSiteSurvey - enter\n"));

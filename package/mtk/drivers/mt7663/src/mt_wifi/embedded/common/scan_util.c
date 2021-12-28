@@ -84,7 +84,7 @@ VOID ApSiteSurvey_by_wdev(
 	BSS_TABLE *ScanTab = get_scan_tab_by_wdev(pAd, wdev);
 	UINT8 band_idx = BAND0;
 #ifdef APCLI_SUPPORT
-	PSTA_ADMIN_CONFIG pStaCfg = GetStaCfgByWdev(pAd, wdev);
+	//PSTA_ADMIN_CONFIG pStaCfg = GetStaCfgByWdev(pAd, wdev);
 #endif
 #ifdef CON_WPS
 	UCHAR ifIdx;

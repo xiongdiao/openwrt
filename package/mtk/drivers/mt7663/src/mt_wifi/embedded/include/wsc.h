@@ -29,7 +29,6 @@
 
 #ifndef	__WSC_H__
 #define	__WSC_H__
-
 #if defined(__ECOS) && defined(BRANCH_ADV)
 extern int CFG_set(int id, void *val);
 extern int CFG_str2id(char *var);
@@ -149,7 +148,6 @@ static inline BOOLEAN WscCheckWSCHeader(UCHAR *pData)
 }
 
 #ifdef WSC_INCLUDED
-
 
 /* WSC HDR PSH BTN FUNC */
 /* WSC hardware push button function 0811 */
@@ -300,7 +298,6 @@ static inline BOOLEAN WscCheckWSCHeader(UCHAR *pData)
 #define	DEV_PASS_ID_REG				0x0005
 #define DEV_PASS_ID_SMPBC			0x0006
 #define	DEV_PASS_ID_NOSPEC			0xffff
-
 
 /* Common definition */
 #define	WSC_VERSION					0x10
