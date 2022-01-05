@@ -381,8 +381,8 @@ typedef struct os_cookie	*POS_COOKIE;
 ra_dma_addr_t linux_pci_map_single(void *handle, void *ptr, size_t size, int sd_idx, int direction);
 void linux_pci_unmap_single(void *handle, ra_dma_addr_t dma_addr, size_t size, int direction);
 
-#define pci_enable_msi		RtmpOsPciMsiEnable
-#define pci_disable_msi		RtmpOsPciMsiDisable
+//#define pci_enable_msi		RtmpOsPciMsiEnable
+//#define pci_disable_msi		RtmpOsPciMsiDisable
 
 #define PCI_MAP_SINGLE_DEV(_handle, _ptr, _size, _sd_idx, _dir)				\
 	linux_pci_map_single(_handle, _ptr, _size, _sd_idx, _dir)

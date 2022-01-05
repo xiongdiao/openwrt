@@ -6,6 +6,10 @@
 
 obj-y := prom.o of.o reset.o
 
+ifeq ($(CONFIG_MIPS_MT_SMP),y)
+	obj-y += malta-amon.o
+endif
+
 ifndef CONFIG_MIPS_GIC
 	obj-y += clk.o timer.o
 endif

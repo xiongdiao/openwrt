@@ -270,7 +270,8 @@ static int DEVINIT rt_pci_probe(struct pci_dev *pdev, const struct pci_device_id
 
 	/*msi request*/
 #ifdef CONFIG_WIFI_MSI_SUPPORT
-	if (RtmpOsPciMsiEnable(pdev) != 0) {
+	//if (RtmpOsPciMsiEnable(pdev) != 0) {
+	if (pci_enable_msi(pdev) != 0) {
 		MTWF_LOG(DBG_CAT_HIF, CATHIF_PCI, DBG_LVL_ERROR,
 		 ("Request MSI resource failed, use INTx!\n"));
 	}
@@ -444,7 +445,10 @@ static VOID DEVEXIT rt_pci_remove(struct pci_dev *pci_dev)
 	}
 #ifdef CONFIG_WIFI_MSI_SUPPORT
 	if (pci_dev->msi_enabled)
-		RtmpOsPciMsiDisable(pci_dev);
+    {
+		//RtmpOsPciMsiDisable(pci_dev);
+		pci_disable_msi(pci_dev);
+    }
 #endif /*CONFIG_WIFI_MSI_SUPPORT*/
 
 	/* Free the root net_device */

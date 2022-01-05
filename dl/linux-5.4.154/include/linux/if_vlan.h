@@ -80,6 +80,10 @@ static inline bool is_vlan_dev(const struct net_device *dev)
 #define skb_vlan_tag_get_cfi(__skb)	(!!((__skb)->vlan_tci & VLAN_CFI_MASK))
 #define skb_vlan_tag_get_prio(__skb)	(((__skb)->vlan_tci & VLAN_PRIO_MASK) >> VLAN_PRIO_SHIFT)
 
+#define vlan_tx_tag_present(__skb) ((__skb)->vlan_present)
+#define vlan_tx_tag_get(__skb) ((__skb)->vlan_tci)
+#define vlan_tx_tag_get_id(__skb) ((__skb)->vlan_tci & VLAN_VID_MASK)
+
 static inline int vlan_get_rx_ctag_filter_info(struct net_device *dev)
 {
 	ASSERT_RTNL();

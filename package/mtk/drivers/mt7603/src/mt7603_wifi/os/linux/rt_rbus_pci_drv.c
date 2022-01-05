@@ -1912,7 +1912,7 @@ VOID RTMPInitPCIeDevice(RT_CMD_PCIE_INIT *pConfig, VOID *pAdSrc)
 {
 	PRTMP_ADAPTER pAd = (PRTMP_ADAPTER)pAdSrc;
 	VOID *pci_dev = pConfig->pPciDev;
-	USHORT  device_id;
+	USHORT  device_id = 0;
 	POS_COOKIE pObj;
 
 

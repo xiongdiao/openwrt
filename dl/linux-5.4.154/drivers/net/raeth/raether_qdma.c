@@ -45,7 +45,7 @@
 #endif
  
 #if LINUX_VERSION_CODE > KERNEL_VERSION(3,10,20)
-#include <asm-generic/pci-dma-compat.h>
+//#include <asm-generic/pci-dma-compat.h>
 #endif
 
 #include "ra2882ethreg.h"
@@ -1074,7 +1074,7 @@ int rt2880_eth_send_tso(END_DEVICE *ei_local, struct net_device* dev, struct sk_
 	struct iphdr *iph = NULL;
 	struct QDMA_txdesc *init_cpu_ptr;
 	struct tcphdr *th = NULL;
-	struct skb_frag_struct *frag;
+	struct bio_vec *frag;
 	unsigned int nr_frags = skb_shinfo(skb)->nr_frags;
 	unsigned int len, size, offset, frag_txd_num;
 	int init_txd_idx, i;
@@ -1286,7 +1286,7 @@ int rt2880_eth_send_tso(END_DEVICE *ei_local, struct net_device* dev, struct sk_
 			// 1. set or get init value for current fragment
 			offset = 0;  
 			frag = &skb_shinfo(skb)->frags[i];
-			len = frag->size; 
+			len = frag->bv_len; 
 			frag_txd_num = cal_frag_txd_num(len); // calculate the needed TXD numbers for this fragment
 			for(frag_txd_num = frag_txd_num;frag_txd_num > 0; frag_txd_num --){
 				// 2. size will be assigned to SDL and can't be larger than MAX_TXD_LEN
@@ -1383,10 +1383,10 @@ int rt2880_eth_send_tso(END_DEVICE *ei_local, struct net_device* dev, struct sk_
 				cpu_ptr->txd_info1.SDP = pci_map_page(NULL, frag->page, frag->page_offset, frag->size, PCI_DMA_TODEVICE);
 #else
 #if defined (CONFIG_MIPS)//harry mt7622
-				cpu_ptr->txd_info1.SDP = pci_map_page(NULL, frag->page.p, frag->page_offset + offset, size, PCI_DMA_TODEVICE);
+				cpu_ptr->txd_info1.SDP = pci_map_page(NULL, frag->bv_page, frag->bv_offset + offset, size, PCI_DMA_TODEVICE);
 				//				printk(" frag->page = %08x. frag->page_offset = %08x. frag->size = % 08x.\n", frag->page, (frag->page_offset+offset), size);
 #else
-				cpu_ptr->txd_info1.SDP  = dma_map_page(dev->dev.parent, frag->page.p, frag->page_offset + offset, size, DMA_TO_DEVICE);
+				cpu_ptr->txd_info1.SDP  = dma_map_page(dev->dev.parent, frag->bv_page, frag->bv_offset + offset, size, DMA_TO_DEVICE);
 #endif
 #endif
 				cpu_ptr->txd_info3.SDL = size;
@@ -1518,7 +1518,7 @@ int ei_start_xmit(struct sk_buff* skb, struct net_device *dev, int gmac_no)
 	unsigned int num_of_txd = 0;
 #if defined (CONFIG_RAETH_TSO)
 	unsigned int nr_frags = skb_shinfo(skb)->nr_frags, i;
-	struct skb_frag_struct *frag;
+	struct bio_vec *frag;
 #endif
 #ifdef CONFIG_PSEUDO_SUPPORT
 	PSEUDO_ADAPTER *pAd;
@@ -1541,7 +1541,8 @@ int ei_start_xmit(struct sk_buff* skb, struct net_device *dev, int gmac_no)
 
 
 
-	dev->trans_start = jiffies;	/* save the timestamp */
+	//dev->trans_start = jiffies;	/* save the timestamp */
+    netif_trans_update(dev);
 	spin_lock_irqsave(&ei_local->page_lock, flags);	
 #if defined (CONFIG_MIPS)	
 	dma_cache_sync(NULL, skb->data, skb_headlen(skb), DMA_TO_DEVICE);
@@ -1557,7 +1558,7 @@ int ei_start_xmit(struct sk_buff* skb, struct net_device *dev, int gmac_no)
 	if(nr_frags != 0){
 		for(i=0;i<nr_frags;i++) {
 			frag = &skb_shinfo(skb)->frags[i];
-			num_of_txd  += cal_frag_txd_num(frag->size);
+			num_of_txd  += cal_frag_txd_num(frag->bv_len);
 		}
 	}
 #else

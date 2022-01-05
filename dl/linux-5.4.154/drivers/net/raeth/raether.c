@@ -3272,9 +3272,9 @@ void RAETH_Init_PSEUDO(pEND_DEVICE pAd, struct net_device *net_dev)
 	if (i < 0 || ((memcmp(addr.sa_data, zero1, 6) == 0) || (addr.sa_data[0] & 0x1)) || 
 	    (memcmp(addr.sa_data, zero2, 6) == 0)) {
 		unsigned char mac_addr01234[5] = {0x00, 0x0C, 0x43, 0x28, 0x80};
-		net_srandom(jiffies);
+		prandom_seed(jiffies);
 		memcpy(addr.sa_data, mac_addr01234, 5);
-		addr.sa_data[5] = net_random()&0xFF;
+		addr.sa_data[5] = prandom_u32()&0xFF;
 	}
 
 	ei_set_mac2_addr(dev, &addr);

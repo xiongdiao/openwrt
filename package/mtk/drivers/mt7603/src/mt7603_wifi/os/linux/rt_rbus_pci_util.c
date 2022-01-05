@@ -22,7 +22,6 @@
 
 
 #ifdef RTMP_MAC_PCI
-
 /* Function for Tx/Rx/Mgmt Desc Memory allocation. */
 void RtmpAllocDescBuf(
 	IN PPCI_DEV pPciDev,

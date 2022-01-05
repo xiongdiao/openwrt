@@ -468,7 +468,9 @@ int RtmpOsPciFindCapability(VOID *pDev, INT Cap)
  */
 int RtmpOsPciMsiEnable(VOID *pDev)
 {
-	return pci_enable_msi(pDev);
+	//return pci_enable_msi((struct pci_dev *)pDev);
+	pci_enable_msi((struct pci_dev *)pDev);
+	return 0;
 }
 
 
@@ -486,7 +488,7 @@ int RtmpOsPciMsiEnable(VOID *pDev)
  */
 VOID RtmpOsPciMsiDisable(VOID *pDev)
 {
-	pci_disable_msi(pDev);
+	//pci_disable_msi((struct pci_dev *)pDev);
 }
 
 #endif /* RTMP_MAC_PCI */
